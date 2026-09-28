@@ -1,0 +1,41 @@
+How often each flag fires (scam rate when it fires):
+                    fires  scam_rate
+unsafe_payment        175       0.90
+payment_switch         48       0.96
+deposit_or_hold        55       1.00
+hide_reference         58       0.97
+urgency                95       0.84
+off_platform           65       0.83
+send_after_payment    160       0.97
+sob_story             265       0.72
+trust_claims           67       0.84
+asks_for_codes         25       0.96
+new_account           282       0.61
+few_followers         251       0.64
+sudden_seller          80       0.86
+too_cheap             196       0.97
+no_seat_details       486       0.54
+event_not_found        46       0.85
+event_mismatch         60       0.83
+high_demand           388       0.59
+before_on_sale         42       0.93
+format_mismatch        68       0.96 
+
+MODEL ONLY
+              precision    recall  f1-score   support
+
+     genuine       1.00      0.96      0.98        78
+        scam       0.96      1.00      0.98        75
+
+    accuracy                           0.98       153
+   macro avg       0.98      0.98      0.98       153
+weighted avg       0.98      0.98      0.98       153
+
+Scam recall (share of scams caught): 100%
+Scam precision (share of alerts that were real scams): 96%
+
+MODEL + HARD-STOP RULES
+Scam recall: 100%   precision: 95%
+
+Top 15 signals: deposit_or_hold, hide_reference, unsafe_payment, format_mismatch, sudden_seller, payment_switch, too_cheap, few_followers, off_platform, new_account, before_on_sale, asks_for_codes, event_mismatch, send_after_payment, the app
+Saved model/scam_model.joblib and charts in outputs/

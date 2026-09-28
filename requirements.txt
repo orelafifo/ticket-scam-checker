@@ -1,0 +1,8 @@
+pandas
+scikit-learn
+matplotlib
+joblib
+streamlit
+requests          # Ticketmaster event lookup
+google-genai      # Gemini explainer (free tier)
+anthropic         # optional alternative explainer
