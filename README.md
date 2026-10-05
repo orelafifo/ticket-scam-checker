@@ -5,7 +5,8 @@
 pip install -r requirements.txt
 python step1_make_dataset.py     # builds data/listings.csv (synthetic)
 python step2_train_model.py      # trains model, prints results, saves charts
-streamlit run app.py
+streamlit run app.py             # run app
+Cntrl + C                        # stop app
 ```
 Optional keys (the app works without them):
 ```
