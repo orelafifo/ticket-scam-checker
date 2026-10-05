@@ -6,3 +6,4 @@ streamlit
 requests          # Ticketmaster event lookup
 google-genai      # Gemini explainer (free tier)
 anthropic         # optional alternative explainer
+python-dotenv     # loads API keys from .env

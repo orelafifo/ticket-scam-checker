@@ -9,9 +9,14 @@ Answers four Core questions:
 It also returns app_only (for the PDF/screenshot check), the event status
 (cancelled / postponed) and the official face-value range.
 
-Two sources:
+Sources (keys go in a .env file, see .env.example):
   * LIVE:    Ticketmaster Discovery API (free key: developer.ticketmaster.com)
-             export TICKETMASTER_API_KEY="your-key"
+             TICKETMASTER_API_KEY=...   (also covers Live Nation events)
+  * LIVE:    Skiddle Events API (free key: skiddle.com/api/join.php)
+             SKIDDLE_API_KEY=...        (UK gigs, clubs, festivals)
+  * NOT POSSIBLE: AXS, See Tickets, DICE, Eventim, Gigantic have no public API.
+             For these the user picks the official seller, and "not found" is
+             treated as "couldn't check" rather than a red flag.
   * OFFLINE: data/events_demo.csv - a small DEMO catalogue so the app works on
              camera without internet. It is made-up sample data, NOT real tour
              dates. Say so in the video.
@@ -19,8 +24,8 @@ Two sources:
 Values are True / False / None. None = "couldn't check", which never raises a
 red flag by itself (we don't punish a seller because our lookup failed).
 
-Limitation to mention: the Discovery API mostly covers events sold through
-Ticketmaster, so "not found" can mean "sold by another ticket agent".
+Limitation to mention: no single source covers every UK ticket agent, so
+"not found" only counts as a red flag when the official seller is one we search.
 """
 from __future__ import annotations
 
@@ -34,6 +39,7 @@ import pandas as pd
 
 CATALOGUE = Path(__file__).parent / "data" / "events_demo.csv"
 TM_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
+SKIDDLE_URL = "https://www.skiddle.com/api/v1/events/search/"
 GENERIC_VENUE_WORDS = {"the", "arena", "stadium", "london", "manchester", "birmingham", "live", "hall"}
 
 
@@ -136,7 +142,42 @@ def _ticketmaster(artist: str, api_key: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Source 2: offline demo catalogue
+# Source 2: Skiddle Events API (UK gigs, clubs, festivals)
+# Free key: apply at https://www.skiddle.com/api/join.php
+# Terms: you must credit Skiddle (name + logo) wherever its data is shown.
+# ---------------------------------------------------------------------------
+def _skiddle(artist: str, api_key: str, event_date: date | None) -> list[dict]:
+    import requests
+    params = {"api_key": api_key, "keyword": artist, "limit": 100, "description": 1}
+    if event_date:  # narrow the search to the month around the date
+        params["minDate"] = date(event_date.year, event_date.month, 1).isoformat()
+    resp = requests.get(SKIDDLE_URL, timeout=6, params=params)
+    resp.raise_for_status()
+    events = []
+    for e in resp.json().get("results", []) or []:
+        names = [e.get("eventname", "")] + [a.get("name", "") for a in (e.get("artists") or [])]
+        if not any(artist_matches(artist, n) for n in names):
+            continue
+        day = e.get("date") or (e.get("startdate") or "")[:10]
+        price = str(e.get("entryprice") or "").replace("£", "").split()[0] if e.get("entryprice") else None
+        try:
+            price = float(price) if price else None
+        except ValueError:
+            price = None
+        events.append(dict(
+            date=date.fromisoformat(day) if day else None,
+            venue=(e.get("venue") or {}).get("name", ""),
+            on_sale=None,                      # Skiddle doesn't give a general on-sale date
+            status="cancelled" if str(e.get("cancelled", "0")) == "1" else "onsale",
+            high_demand=False,                 # not available from Skiddle
+            app_only=None,                     # unknown: Skiddle often uses e-tickets, so don't assume
+            face_min=price, face_max=price,
+        ))
+    return events
+
+
+# ---------------------------------------------------------------------------
+# Source 3: offline demo catalogue
 # ---------------------------------------------------------------------------
 def _catalogue(artist: str) -> list[dict] | None:
     """Returns None if the artist isn't in the demo catalogue at all
@@ -156,26 +197,62 @@ def _catalogue(artist: str) -> list[dict] | None:
 # ---------------------------------------------------------------------------
 # Public function
 # ---------------------------------------------------------------------------
+# Ticket sellers we can search. AXS, See Tickets, DICE, Eventim and Gigantic
+# have no public API (partner access only), so we can't confirm their events.
+SEARCHABLE_SELLERS = {"Ticketmaster", "Skiddle"}
+SELLER_OPTIONS = ["Don't know", "Ticketmaster", "Skiddle", "AXS", "See Tickets",
+                  "DICE", "Eventim", "Gigantic", "Other"]
+
+
 def check_event(artist: str, venue: str = "", event_date: date | None = None,
-                today: date | None = None) -> dict:
+                today: date | None = None, official_seller: str = "Don't know") -> dict:
+    """official_seller = who sells the official tickets (from the artist's website).
+    We only say 'event not found' when that seller is one we can actually search;
+    otherwise a missing result just means 'couldn't check' (no red flag)."""
     today = today or date.today()
     if not artist or not artist.strip():
         return _empty("none", "No artist entered, so the event wasn't checked.")
 
-    key = os.getenv("TICKETMASTER_API_KEY")
-    if key:
+    # 1) Ask every live source we have a key for
+    sources = {"Ticketmaster": ("TICKETMASTER_API_KEY", lambda k: _ticketmaster(artist, k)),
+               "Skiddle": ("SKIDDLE_API_KEY", lambda k: _skiddle(artist, k, event_date))}
+    events, searched, problems, hits = [], [], [], []
+    for name, (env_var, fetch) in sources.items():
+        key = os.getenv(env_var)
+        if not key:
+            continue
         try:
-            return _judge(_ticketmaster(artist, key), venue, event_date, today, "Ticketmaster")
-        except Exception as e:  # network down, bad key, rate limit -> fall back, never crash
-            fallback_reason = f"Live lookup failed ({e.__class__.__name__}), used demo catalogue."
-    else:
-        fallback_reason = "No Ticketmaster key set, used demo catalogue."
+            found = fetch(key)
+            searched.append(name)
+            events += found
+            if found:
+                hits.append(name)
+        except Exception as e:  # network down, bad key, rate limit -> carry on, never crash
+            problems.append(f"{name} lookup failed ({e.__class__.__name__})")
 
+    if events:
+        return _judge(events, venue, event_date, today, " + ".join(hits))
+
+    if searched:
+        if official_seller in SEARCHABLE_SELLERS and official_seller in searched:
+            r = _empty(" + ".join(searched), f"No official {official_seller} event found for this artist.")
+            r["found"] = False
+            return r
+        elif official_seller in SEARCHABLE_SELLERS:  # its key is missing or its lookup failed
+            problems.append(f"Not found on {' or '.join(searched)}, and {official_seller} couldn't be searched")
+        else:
+            seller = "the official seller" if official_seller == "Don't know" else official_seller
+            # don't return yet: the demo catalogue below may still know the artist
+            problems.append(f"Not found on {' or '.join(searched)}. Tickets may be sold by {seller}, "
+                            "which we can't search, so check the artist's official website")
+
+    # 2) Fall back to the offline demo catalogue
+    reason = "; ".join(problems) or "No API keys set, used demo catalogue"
     events = _catalogue(artist)
     if events is None:
-        return _empty("demo catalogue", fallback_reason + " Artist not in demo catalogue, so not checked.")
+        return _empty("demo catalogue", reason + ". Event not checked.")
     result = _judge(events, venue, event_date, today, "demo catalogue")
-    result["note"] = f"{result['note']} ({fallback_reason})"
+    result["note"] = f"{result['note']} ({reason})"
     return result
 
 
