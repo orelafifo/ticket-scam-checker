@@ -9,7 +9,7 @@ streamlit run app.py             # run app
 ```
 ## Stop App
 ```
-Cntrl + C                        # stop app
+Cntrl + C                        # stop appp
 ```
 Optional keys (the app works without them):
 ```
