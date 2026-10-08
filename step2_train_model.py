@@ -40,9 +40,16 @@ def row_to_event(r) -> dict:
                 app_only=bool(r.event_app_only))
 
 
+def row_to_channel(r) -> dict:
+    return dict(category=None if r.ch_category == "none" else r.ch_category,
+                lookalike=bool(r.ch_lookalike), new_domain=bool(r.ch_new_domain),
+                insecure_or_short=bool(r.ch_insecure_or_short))
+
+
 df = pd.read_csv("data/listings.csv")
 flags = df.apply(lambda r: all_flags(r.text, r.account_age_days, r.followers, r.price_ratio,
-                                     r.has_seat_details, r.sudden_seller, row_to_event(r)), axis=1)
+                                     r.has_seat_details, r.sudden_seller, row_to_event(r),
+                                     row_to_channel(r)), axis=1)
 # (sudden_seller is both a raw column and a flag, so drop raw copies before joining)
 df = pd.concat([df.drop(columns=[c for c in FLAG_COLUMNS if c in df.columns]),
                 pd.DataFrame(list(flags))], axis=1)

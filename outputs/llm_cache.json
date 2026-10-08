@@ -1,0 +1,402 @@
+{
+ "S01": {
+  "scam_probability": 0.95,
+  "reason": "Vague listing with no price, event details, or secure payment methods on Facebook.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S02": {
+  "scam_probability": 0.99,
+  "reason": "Demanding Friends & Family payment on Facebook is a textbook ticket scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S03": {
+  "scam_probability": 0.9,
+  "reason": "Extremely generic phrasing without event details, typical of common Facebook ticket scams.",
+  "model": "gemini-flash-latest"
+ },
+ "S04": {
+  "scam_probability": 0.95,
+  "reason": "Uses classic scam phrasing like 'kindly DM' and 'cheap tickets at a discount rate'.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S05": {
+  "scam_probability": 0.98,
+  "reason": "Demanding PayPal Friends & Family removes buyer protection, a hallmark of ticket scams.",
+  "model": "gemini-flash-latest"
+ },
+ "S06": {
+  "scam_probability": 0.99,
+  "reason": "Demanding payment via untraceable gift cards is a definitive sign of resale fraud.",
+  "model": "gemini-flash-latest"
+ },
+ "S07": {
+  "scam_probability": 0.8,
+  "reason": "Vague excuse, high-risk platform, and no ticket details provided.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S08": {
+  "scam_probability": 0.85,
+  "reason": "Vague details, urgency, and selling cheap on Facebook strongly indicate a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S09": {
+  "scam_probability": 0.99,
+  "reason": "Requests payment via Amazon gift card, a common scam tactic.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S10": {
+  "scam_probability": 0.2,
+  "reason": "Common honest mistake excuse, but Facebook resale carries inherent risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S11": {
+  "scam_probability": 0.95,
+  "reason": "Classic overseas medical emergency excuse used by ticket scammers.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S12": {
+  "scam_probability": 0.99,
+  "reason": "High-demand gig, bank transfer requested, and DMs only strongly indicate a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S13": {
+  "scam_probability": 0.99,
+  "reason": "Direct bank transfer request on social media with fabricated urgency strongly indicates fraud.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S14": {
+  "scam_probability": 0.95,
+  "reason": "High-risk platform, selling below face value, and requesting bank transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S15": {
+  "scam_probability": 0.99,
+  "reason": "High-demand sold-out show, upfront payment via Facebook, and delayed ticket transfer indicate high scam risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S16": {
+  "scam_probability": 0.95,
+  "reason": "High-risk indicators: Facebook platform, WhatsApp redirection, and bank transfer only.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S17": {
+  "scam_probability": 0.85,
+  "reason": "High-demand FA Cup final ticket, urgency tactics, and unsafe Facebook payment request.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S18": {
+  "scam_probability": 0.95,
+  "reason": "High-risk platform, anonymous payment methods, and vague pricing strongly indicate a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S19": {
+  "scam_probability": 1.0,
+  "reason": "Bank transfer requests on Instagram for high-demand tickets are classic scams.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S20": {
+  "scam_probability": 0.99,
+  "reason": "Phishing domain impersonating Twickets; the official site is twickets.live, not a hyphenated .com.",
+  "model": "gemini-3-flash-preview"
+ },
+ "S21": {
+  "scam_probability": 0.98,
+  "reason": "Uses common excuses to avoid protected payments in favor of non-reversible bank transfers or crypto.",
+  "model": "gemini-3-flash-preview"
+ },
+ "S22": {
+  "scam_probability": 1.0,
+  "reason": "Glastonbury tickets are non-transferable and only sold via official registration and See Tickets.",
+  "model": "gemini-3-flash-preview"
+ },
+ "S23": {
+  "scam_probability": 0.92,
+  "reason": "Demanding upfront payment with artificial urgency on an unprotected platform indicates a classic scam.",
+  "model": "gemini-flash-latest"
+ },
+ "S24": {
+  "scam_probability": 0.99,
+  "reason": "Fake URL, unverified site, and 2027 tour does not exist yet.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S25": {
+  "scam_probability": 0.95,
+  "reason": "Demanding an upfront deposit before meeting in person is a classic advance-fee scam.",
+  "model": "gemini-flash-latest"
+ },
+ "S26": {
+  "scam_probability": 0.95,
+  "reason": "Unknown website, generic ticket phrasing, and suspiciously low pricing suggest a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S27": {
+  "scam_probability": 0.99,
+  "reason": "Bank transfer on X with unverified presale codes strongly indicates a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S28": {
+  "scam_probability": 0.99,
+  "reason": "Phishing text using a suspicious domain charging an upfront fee for fake access codes.",
+  "model": "gemini-flash-latest"
+ },
+ "S29": {
+  "scam_probability": 0.98,
+  "reason": "High-demand tickets at face value demanding unprotected bank transfers are classic scam indicators.",
+  "model": "gemini-flash-latest"
+ },
+ "S30": {
+  "scam_probability": 0.95,
+  "reason": "High-risk platform, demands irreversible payment methods, vague contact details.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S31": {
+  "scam_probability": 0.99,
+  "reason": "Sold-out show, Instagram platform, pay-first demand, high risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S32": {
+  "scam_probability": 0.9,
+  "reason": "Selling below face value on X with unverified screenshots is a classic scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S33": {
+  "scam_probability": 0.85,
+  "reason": "X is high risk for ticket scams; urgent sale and vague payment details.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S34": {
+  "scam_probability": 0.99,
+  "reason": "Classic scam: selling abroad for surgery, frozen account, and asking for friend's account.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S35": {
+  "scam_probability": 0.95,
+  "reason": "Classic social media ticket scam tactic requesting public engagement to avoid detection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S36": {
+  "scam_probability": 0.95,
+  "reason": "Unrealistic currency, PayPal Friends and Family, and high-risk platform.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S37": {
+  "scam_probability": 0.95,
+  "reason": "Bank transfer only and Facebook Marketplace strongly indicate ticket fraud.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S38": {
+  "scam_probability": 0.99,
+  "reason": "High-demand tickets, unverified platform, above face value, and bank transfer request.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S39": {
+  "scam_probability": 1,
+  "reason": "Phishing domain mimicking Twickets requesting immediate payment via text message.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "S40": {
+  "scam_probability": 1,
+  "reason": "Asking for a 6-digit code is a classic Ticketmaster account takeover scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G01": {
+  "scam_probability": 0.0,
+  "reason": "Platform is face-value resale; realistic pricing and standard transfer method.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G02": {
+  "scam_probability": 0.01,
+  "reason": "Official Ticketmaster Resale platform provides verified ticket transfers and secure payment processing.",
+  "model": "gemini-3-flash-preview"
+ },
+ "G03": {
+  "scam_probability": 0.0,
+  "reason": "Standard official DICE waiting list notification, completely safe.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G04": {
+  "scam_probability": 0.0,
+  "reason": "Official platform resale at face value carries negligible fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G05": {
+  "scam_probability": 0.05,
+  "reason": "Uses safe payment method, face value, and standard ticket transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G06": {
+  "scam_probability": 0.05,
+  "reason": "Offers Twickets for buyer protection at face value, indicating a low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G07": {
+  "scam_probability": 0.85,
+  "reason": "Redirecting to external links and selling via social media are high fraud indicators.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G08": {
+  "scam_probability": 0.95,
+  "reason": "Bank transfer on WhatsApp with no platform protection indicates high fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G09": {
+  "scam_probability": 0.8,
+  "reason": "High resale prices and instant download on secondary platforms carry elevated risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G10": {
+  "scam_probability": 0.05,
+  "reason": "Platform has buyer protection and verified listing details.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G11": {
+  "scam_probability": 0.1,
+  "reason": "Uses PayPal Goods and Services and Ticketmaster transfer safely.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G12": {
+  "scam_probability": 0.1,
+  "reason": "Meeting in person at the venue significantly reduces fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G13": {
+  "scam_probability": 0.05,
+  "reason": "Low risk; directs buyer to official Ticketmaster platform for transaction.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G14": {
+  "scam_probability": 0.05,
+  "reason": "Uses safe platform DICE and PayPal G&S, low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G15": {
+  "scam_probability": 0.85,
+  "reason": "Bank transfer request for ticket resale carries extremely high fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G16": {
+  "scam_probability": 0.0,
+  "reason": "Official resale platform transaction minimizes scam risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G17": {
+  "scam_probability": 0.1,
+  "reason": "Official platform link and standard pricing suggest a low fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G18": {
+  "scam_probability": 0.1,
+  "reason": "Uses PayPal G&S and Ticketmaster transfer, indicating a safe transaction.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G19": {
+  "scam_probability": 0.1,
+  "reason": "Offering PayPal Goods and Services and Ticketmaster transfer indicates a likely legitimate seller.",
+  "model": "gemini-3-flash-preview"
+ },
+ "G20": {
+  "scam_probability": 0.5,
+  "reason": "Twitter is high-risk for scams; scammers often mimic legitimate transfer methods to gain trust.",
+  "model": "gemini-3-flash-preview"
+ },
+ "G21": {
+  "scam_probability": 0.2,
+  "reason": "Acceptance of PayPal Goods and Services provides buyer protection, significantly reducing fraud risk.",
+  "model": "gemini-3-flash-preview"
+ },
+ "G22": {
+  "scam_probability": 0.05,
+  "reason": "Twickets is a secure face-value platform using official Ticketmaster transfer methods.",
+  "model": "gemini-3-flash-preview"
+ },
+ "G23": {
+  "scam_probability": 0.02,
+  "reason": "Official Ticketmaster Resale platform verifies and reissues tickets securely with buyer protection.",
+  "model": "gemini-flash-latest"
+ },
+ "G24": {
+  "scam_probability": 0.0,
+  "reason": "Official DICE waiting list notification, highly secure and legitimate platform.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G25": {
+  "scam_probability": 0.1,
+  "reason": "Offering ticket transfer before payment indicates low scam risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G26": {
+  "scam_probability": 0.1,
+  "reason": "Mentions official club app transfer and face value, indicating low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G27": {
+  "scam_probability": 0.05,
+  "reason": "Uses official ATG app transfer and PayPal Goods and Services for protection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G28": {
+  "scam_probability": 0.1,
+  "reason": "Low risk due to PayPal Goods and Services protection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G29": {
+  "scam_probability": 0.0,
+  "reason": "Listing is directly on viagogo, protected by their buyer guarantee.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G30": {
+  "scam_probability": 0.1,
+  "reason": "StubHub offers buyer protection, lowering fraud risk for standard event listings.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G31": {
+  "scam_probability": 0.0,
+  "reason": "Authentic listing from an official secondary platform at face value.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G32": {
+  "scam_probability": 0.1,
+  "reason": "Accepts PayPal G&S and offers ticket transfer first, indicating low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G33": {
+  "scam_probability": 0.1,
+  "reason": "Low risk, uses DICE app transfer and asks for face value.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G34": {
+  "scam_probability": 0.0,
+  "reason": "Official Ticketmaster Resale platform provides high security and buyer protection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G35": {
+  "scam_probability": 0.0,
+  "reason": "Official platform resale listing carries extremely low fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G36": {
+  "scam_probability": 0.05,
+  "reason": "Uses secure payment method PayPal Goods & Services and official ticket transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G37": {
+  "scam_probability": 0.05,
+  "reason": "Low risk; Ticketmaster transfer and payment after delivery reduce fraud.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G38": {
+  "scam_probability": 0.1,
+  "reason": "Low risk due to PayPal Goods & Services and AXS transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G39": {
+  "scam_probability": 0.05,
+  "reason": "Safe resale method using Twickets at face value, minimizing risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "G40": {
+  "scam_probability": 0.1,
+  "reason": "Offers PayPal Goods and Services and official AXS transfer, providing significant buyer protection.",
+  "model": "gemini-3-flash-preview"
+ }
+}

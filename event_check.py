@@ -200,15 +200,19 @@ def _catalogue(artist: str) -> list[dict] | None:
 # Ticket sellers we can search. AXS, See Tickets, DICE, Eventim and Gigantic
 # have no public API (partner access only), so we can't confirm their events.
 SEARCHABLE_SELLERS = {"Ticketmaster", "Skiddle"}
-SELLER_OPTIONS = ["Don't know", "Ticketmaster", "Skiddle", "AXS", "See Tickets",
-                  "DICE", "Eventim", "Gigantic", "Other"]
+SELLER_OPTIONS = ["Ticketmaster", "AXS", "See Tickets", "DICE", "Skiddle",
+                  "Eventim", "Gigantic", "Other"]   # pick all that apply; none picked = don't know
 
 
 def check_event(artist: str, venue: str = "", event_date: date | None = None,
-                today: date | None = None, official_seller: str = "Don't know") -> dict:
-    """official_seller = who sells the official tickets (from the artist's website).
-    We only say 'event not found' when that seller is one we can actually search;
+                today: date | None = None, official_sellers=None) -> dict:
+    """official_sellers = list of who sells the official tickets (from the artist's
+    website); empty = don't know. Gigs are often split across several sellers.
+    We only say 'event not found' when EVERY official seller is one we searched;
     otherwise a missing result just means 'couldn't check' (no red flag)."""
+    if isinstance(official_sellers, str):  # accept a single name too
+        official_sellers = [official_sellers]
+    sellers = [s for s in (official_sellers or []) if s != "Don't know"]
     today = today or date.today()
     if not artist or not artist.strip():
         return _empty("none", "No artist entered, so the event wasn't checked.")
@@ -234,16 +238,19 @@ def check_event(artist: str, venue: str = "", event_date: date | None = None,
         return _judge(events, venue, event_date, today, " + ".join(hits))
 
     if searched:
-        if official_seller in SEARCHABLE_SELLERS and official_seller in searched:
-            r = _empty(" + ".join(searched), f"No official {official_seller} event found for this artist.")
+        if sellers and all(x in searched for x in sellers):
+            r = _empty(" + ".join(searched),
+                       f"No official event found on {' or '.join(sellers)} for this artist.")
             r["found"] = False
             return r
-        elif official_seller in SEARCHABLE_SELLERS:  # its key is missing or its lookup failed
-            problems.append(f"Not found on {' or '.join(searched)}, and {official_seller} couldn't be searched")
+        unsearched = [x for x in sellers if x not in searched]
+        if any(x in SEARCHABLE_SELLERS for x in unsearched):
+            problems.append(f"Not found on {' or '.join(searched)}, and "
+                            f"{', '.join(x for x in unsearched if x in SEARCHABLE_SELLERS)} couldn't be searched")
         else:
-            seller = "the official seller" if official_seller == "Don't know" else official_seller
+            who = ", ".join(unsearched) if unsearched else "the official seller"
             # don't return yet: the demo catalogue below may still know the artist
-            problems.append(f"Not found on {' or '.join(searched)}. Tickets may be sold by {seller}, "
+            problems.append(f"Not found on {' or '.join(searched)}. Tickets may be sold by {who}, "
                             "which we can't search, so check the artist's official website")
 
     # 2) Fall back to the offline demo catalogue

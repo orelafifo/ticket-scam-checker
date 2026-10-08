@@ -13,6 +13,8 @@ Changes in v2:
     payment reference, "100% legit" trust claims, asking for codes, PDF tickets.
   * Each row also gets seller + event-check fields (sudden_seller, event found,
     details match, high demand, before on-sale, app-only tickets).
+  * v2.2: each row also records WHERE it was sold (official / secondary resale /
+    social media & messaging / unknown website) plus link warning signs.
 
 To stop an unrealistic 100%, we add overlap on purpose: messy genuine sellers
 (bank transfer, urgency, WhatsApp) and sneaky scams (polished, seat details,
@@ -157,6 +159,27 @@ def event_fields(is_scam: bool, mentions_pdf: bool) -> dict:
                 event_before_on_sale=before_on_sale, event_app_only=app_only)
 
 
+def channel_fields(kind: str) -> dict:
+    """Simulate WHERE the listing was found (what channels.py would return).
+    Shares are illustrative, guided by bank reports that most ticket scams start
+    on social media; genuine fans also sell on social media, so there is overlap."""
+    shares = {  # official, secondary, social, unknown_site, not given
+        "genuine": [0.35, 0.15, 0.40, 0.03, 0.07],
+        "messy":   [0.10, 0.10, 0.70, 0.00, 0.10],
+        "scam":    [0.02, 0.06, 0.70, 0.12, 0.10],
+        "sneaky":  [0.03, 0.15, 0.60, 0.15, 0.07],
+    }[kind]
+    cat = random.choices(["official", "secondary", "social", "unknown_site", "none"], weights=shares)[0]
+    is_scam = kind in ("scam", "sneaky")
+    site = cat == "unknown_site"
+    return dict(
+        ch_category=cat,
+        ch_lookalike=int(site and is_scam and random.random() < 0.5),
+        ch_new_domain=int(site and random.random() < (0.8 if is_scam else 0.2)),
+        ch_insecure_or_short=int(site and random.random() < (0.4 if is_scam else 0.05)),
+    )
+
+
 def make(kind: str) -> dict:
     """kind: genuine | messy | scam | sneaky"""
     is_scam = kind in ("scam", "sneaky")
@@ -208,7 +231,7 @@ def make(kind: str) -> dict:
 
     return dict(text=text, account_age_days=age, followers=followers, sudden_seller=sudden,
                 price_ratio=round(price / face, 2), has_seat_details=has_seat,
-                **event_fields(is_scam, mentions_pdf), label=int(is_scam))
+                **event_fields(is_scam, mentions_pdf), **channel_fields(kind), label=int(is_scam))
 
 
 rows = ([make("genuine") for _ in range(240)] + [make("messy") for _ in range(70)] +

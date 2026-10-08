@@ -7,6 +7,7 @@ Each rule is based on published scam-warning advice (Action Fraud, UK Finance,
 bank guidance, Which?) - cite those sources on your slides.
 
 Flag groups:
+  0. Where it's sold (from channels.py)
   A. Payment          B. Language / behaviour
   C. Seller account   D. Ticket evidence       E. Event (from event_check.py)
 """
@@ -110,6 +111,23 @@ def event_flags(event: dict | None, mentions_file_ticket: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 0. Where it's being sold - built from the dict returned by channels.channel_info()
+# ---------------------------------------------------------------------------
+def channel_flags(channel: dict | None) -> dict:
+    c = channel or {}
+    cat = c.get("category")
+    return {
+        "social_or_messaging": int(cat == "social"),
+        "secondary_market": int(cat == "secondary"),
+        "unknown_website": int(cat == "unknown_site"),
+        "lookalike_link": int(bool(c.get("lookalike"))),
+        "new_domain": int(bool(c.get("new_domain"))),
+        "insecure_or_short_link": int(bool(c.get("insecure_or_short"))),
+        "official_platform": int(cat == "official"),   # protective signal (lowers risk)
+    }
+
+
+# ---------------------------------------------------------------------------
 # Descriptions, column order, helpers
 # ---------------------------------------------------------------------------
 TEXT_DESCRIPTIONS = {name: desc for name, _, desc in TEXT_RULES if desc}
@@ -127,20 +145,33 @@ EVENT_DESCRIPTIONS = {
     "before_on_sale": "Tickets offered before the official general sale",
     "format_mismatch": "Offers PDF/screenshot tickets for an app-only event",
 }
-ALL_DESCRIPTIONS = {**TEXT_DESCRIPTIONS, **SELLER_DESCRIPTIONS, **EVENT_DESCRIPTIONS}
-FLAG_COLUMNS = list(TEXT_DESCRIPTIONS) + list(SELLER_DESCRIPTIONS) + list(EVENT_DESCRIPTIONS)
+CHANNEL_DESCRIPTIONS = {
+    "social_or_messaging": "Sold through social media or a messaging app - no buyer protection if it goes wrong",
+    "secondary_market": "Secondary resale site (e.g. viagogo, StubHub) - often above face value, "
+                        "and the event can cancel resold tickets",
+    "unknown_website": "Ticket website we don't recognise",
+    "lookalike_link": "Link imitates a well-known ticket site (possible fake website)",
+    "new_domain": "Website was registered less than 6 months ago",
+    "insecure_or_short_link": "Link isn't secure (http) or hides its destination (link shortener)",
+    "official_platform": "Official seller or face-value resale platform with buyer protection",
+}
+ALL_DESCRIPTIONS = {**CHANNEL_DESCRIPTIONS, **TEXT_DESCRIPTIONS, **SELLER_DESCRIPTIONS, **EVENT_DESCRIPTIONS}
+FLAG_COLUMNS = (list(CHANNEL_DESCRIPTIONS) + list(TEXT_DESCRIPTIONS) +
+                list(SELLER_DESCRIPTIONS) + list(EVENT_DESCRIPTIONS))
+PROTECTIVE = {"official_platform"}  # good signs: shown with a tick, not a red flag
 
 # Rules that force the risk level to High, whatever the model says.
 # Design choice: these are so strongly linked to fraud that we don't want the
 # model to talk us out of them. The model's score is still shown honestly.
-HARD_STOPS = {"asks_for_codes", "hide_reference", "event_mismatch", "format_mismatch"}
+HARD_STOPS = {"asks_for_codes", "hide_reference", "event_mismatch", "format_mismatch",
+              "lookalike_link"}
 
 
 def all_flags(text, account_age_days, followers, price_ratio, has_seat_details,
-              sudden_seller=0, event=None) -> dict:
+              sudden_seller=0, event=None, channel=None) -> dict:
     tf = text_flags(text)
     mentions_file = tf.pop("mentions_file_ticket")
-    flags = {**tf,
+    flags = {**channel_flags(channel), **tf,
              **seller_flags(account_age_days, followers, price_ratio, has_seat_details, sudden_seller),
              **event_flags(event, mentions_file)}
     return {k: flags[k] for k in FLAG_COLUMNS}
@@ -148,7 +179,12 @@ def all_flags(text, account_age_days, followers, price_ratio, has_seat_details,
 
 def triggered(flags: dict) -> list:
     """Plain-English list of the red flags that fired."""
-    return [ALL_DESCRIPTIONS[k] for k, v in flags.items() if v]
+    return [ALL_DESCRIPTIONS[k] for k, v in flags.items() if v and k not in PROTECTIVE]
+
+
+def protections(flags: dict) -> list:
+    """Plain-English list of good signs (e.g. buying through official resale)."""
+    return [ALL_DESCRIPTIONS[k] for k in PROTECTIVE if flags.get(k)]
 
 
 def hard_stops(flags: dict) -> list:
