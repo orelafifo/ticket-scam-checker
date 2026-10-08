@@ -1,0 +1,202 @@
+{
+ "B01": {
+  "scam_probability": 0.98,
+  "reason": "FIFA World Cup tickets are exclusively sold through official FIFA channels, indicating a scam.",
+  "model": "gemini-flash-latest"
+ },
+ "B02": {
+  "scam_probability": 0.1,
+  "reason": "Willingness to use official channels and selling at face value indicates low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B03": {
+  "scam_probability": 0.99,
+  "reason": "Hacked account, below-market pricing, and risky social media platform.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B04": {
+  "scam_probability": 0.0,
+  "reason": "Official platform resale at original face value is safe.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B05": {
+  "scam_probability": 0.05,
+  "reason": "Uses official resale platform and name change, indicating a secure transaction.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B06": {
+  "scam_probability": 0.8,
+  "reason": "Classified sites like Gumtree have high fraud risk; face value and official app transfer are positive.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B07": {
+  "scam_probability": 0.0,
+  "reason": "Official platform resale at face value with secure transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B08": {
+  "scam_probability": 0.05,
+  "reason": "Low risk: offers PayPal Goods & Services and official ATG app transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B09": {
+  "scam_probability": 0.1,
+  "reason": "Willingness to use Twickets and selling below face value indicates low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B10": {
+  "scam_probability": 0.0,
+  "reason": "Standard official DICE waiting list notification, completely safe and legitimate.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B11": {
+  "scam_probability": 0.99,
+  "reason": "WhatsApp sale, massive loss pricing, PayPal personal payment, and excuse to avoid official platforms.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B12": {
+  "scam_probability": 1,
+  "reason": "Classic social media ticket scam involving extra fees after payment.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B13": {
+  "scam_probability": 0.85,
+  "reason": "High-risk platform, sob story, below face value, and email harvesting.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B14": {
+  "scam_probability": 0.05,
+  "reason": "Uses official Ticketmaster resale platform, reducing scam risk significantly.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B15": {
+  "scam_probability": 0.0,
+  "reason": "Official club ticket exchange platform ensuring verified digital transfer.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B16": {
+  "scam_probability": 0.1,
+  "reason": "Standard StubHub listing with fanProtection and delayed ticket transfer is normal.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B17": {
+  "scam_probability": 0.1,
+  "reason": "Low risk due to PayPal Goods & Services and face value.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B19": {
+  "scam_probability": 0.99,
+  "reason": "Currency mismatch, refusal of app resale, bank transfer request, and differing payee name.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B20": {
+  "scam_probability": 1,
+  "reason": "Cloned profile, payment to third party, refuses phone call, and changed bank details.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B21": {
+  "scam_probability": 0.99,
+  "reason": "High-risk social media ticket sale using anonymous payment link.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B22": {
+  "scam_probability": 0.99,
+  "reason": "Classic social media ticket scam using urgency and payment requests in comments.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B23": {
+  "scam_probability": 0.9,
+  "reason": "Snapchat ticketing groups are high-risk for fraud due to lack of buyer protection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B24": {
+  "scam_probability": 0.1,
+  "reason": "Reasonable price, face value, offers recorded postage and photo proof.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B25": {
+  "scam_probability": 0.95,
+  "reason": "Snapchat, urgent last-minute sale, and below-market price strongly indicate a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B26": {
+  "scam_probability": 0.99,
+  "reason": "Bank name mismatch and joint account excuse strongly indicate ticket fraud.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B18": {
+  "scam_probability": 0.0,
+  "reason": "Twickets enforces face value and uses secure transfer methods.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B27": {
+  "scam_probability": 0.85,
+  "reason": "Selling on WhatsApp with face-value price and requests customer number is high risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B28": {
+  "scam_probability": 0.95,
+  "reason": "High-demand tickets, below face value, and redirected payment to a friend.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B29": {
+  "scam_probability": 0.8,
+  "reason": "Classified ads lack buyer protection, making ticket sales highly susceptible to payment fraud.",
+  "model": "gemini-3-flash-preview"
+ },
+ "B30": {
+  "scam_probability": 0.85,
+  "reason": "Selling tickets not yet received and offering address changes are major fraud red flags.",
+  "model": "gemini-3-flash-preview"
+ },
+ "B31": {
+  "scam_probability": 0.01,
+  "reason": "Official Ticketmaster Fan-to-Fan Resale is a secure platform with verified, reissued tickets.",
+  "model": "gemini-3-flash-preview"
+ },
+ "B32": {
+  "scam_probability": 0.99,
+  "reason": "Facebook sale, bank transfer payment, and high-demand match photo indicate high fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B33": {
+  "scam_probability": 1,
+  "reason": "Screenshot tickets and Facebook Marketplace payment before delivery are high fraud indicators.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B34": {
+  "scam_probability": 0.95,
+  "reason": "WhatsApp sale, multiple in-demand events, changed number, and suspicious bulk pricing.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B35": {
+  "scam_probability": 1,
+  "reason": "Unofficial ticketing site promising refunds and cancelling orders before the event.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B36": {
+  "scam_probability": 0.95,
+  "reason": "Extremely underpriced Taylor Swift tickets with suspicious payment methods from a secondary contact.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B37": {
+  "scam_probability": 0.99,
+  "reason": "Edited proof of purchase and PayPal Friends and Family requirement.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B38": {
+  "scam_probability": 0.0,
+  "reason": "This is the official primary ticket vendor for Glastonbury, not a resale fraud.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B39": {
+  "scam_probability": 0.85,
+  "reason": "High-risk platform, demands email contact only, avoids in-app messaging.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "B40": {
+  "scam_probability": 1.0,
+  "reason": "PayPal Friends and Family request and blocking the buyer are definitive indicators of fraud.",
+  "model": "gemini-3-flash-preview"
+ }
+}

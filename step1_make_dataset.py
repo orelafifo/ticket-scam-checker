@@ -13,6 +13,11 @@ Changes in v2:
     payment reference, "100% legit" trust claims, asking for codes, PDF tickets.
   * Each row also gets seller + event-check fields (sudden_seller, event found,
     details match, high demand, before on-sale, app-only tickets).
+  * v2.3: after the real-world error analysis, added short vague scam posts,
+    short genuine posts, listings with no price, and new scam tactics
+    (third-party accounts, presale-code sales, like-and-comment bait,
+    screenshots as proof, "up front" payments). Wording is new, not copied
+    from the real-world test set.
   * v2.2: each row also records WHERE it was sold (official / secondary resale /
     social media & messaging / unknown website) plus link warning signs.
 
@@ -100,6 +105,14 @@ SCAM_DELIVERY = [
     "I'll transfer them after you pay.",
 ]
 SCAM_EXTRAS = [
+    # v2.3 additions: tactics found in the real-world error analysis, worded fresh
+    "Payment goes to my cousin's account as mine is restricted at the moment.",
+    "Going at a discount, just want them gone to a real fan.",
+    "Can send a screenshot of the booking so you know they're real.",
+    "Also got a couple of presale codes going for £30 each.",
+    "Like and comment below and I'll inbox you the details.",
+    "Need the full amount up front to keep them for you.",
+    "Few others asking so first come first served.",
     "Loads of people messaging, first to pay gets them.",
     "Serious buyers only.",
     "DM me on WhatsApp.",
@@ -168,9 +181,11 @@ def channel_fields(kind: str) -> dict:
         "messy":   [0.10, 0.10, 0.70, 0.00, 0.10],
         "scam":    [0.02, 0.06, 0.70, 0.12, 0.10],
         "sneaky":  [0.03, 0.15, 0.60, 0.15, 0.07],
+        "vague":   [0.00, 0.02, 0.88, 0.02, 0.08],
+        "short_genuine": [0.30, 0.05, 0.55, 0.00, 0.10],
     }[kind]
     cat = random.choices(["official", "secondary", "social", "unknown_site", "none"], weights=shares)[0]
-    is_scam = kind in ("scam", "sneaky")
+    is_scam = kind in ("scam", "sneaky", "vague")
     site = cat == "unknown_site"
     return dict(
         ch_category=cat,
@@ -180,9 +195,31 @@ def channel_fields(kind: str) -> dict:
     )
 
 
+# v2.3: real scam posts are often tiny and vague, and genuine posts are often short too.
+VAGUE_SCAM = [
+    "Tickets available, message me.",
+    "{n} spare for {artist}, inbox me.",
+    "Anyone need {artist} tickets? DM.",
+    "Got tickets going for {artist} tonight, pm for info.",
+    "Selling my {artist} tickets cheap, message me for details.",
+    "Have {n} for {venue}, hit me up if interested.",
+    "{artist} tickets going, DM for price.",
+    "Can't make {artist} anymore, {n} tickets going at a discount, PM.",
+    "Who wants {artist} tickets?? Message me x",
+    "Spare {artist} tix, send me a message.",
+]
+SHORT_GENUINE = [
+    "Spare {artist} ticket tonight, £{price} face value, DICE transfer.",
+    "1 x {artist} standing, £{price}, listing it on Twickets now.",
+    "{artist} at {venue}, {section}, £{price} each, Ticketmaster transfer + PayPal G&S.",
+    "Selling 1 for {artist} at face (£{price}), will send via the official app.",
+    "{n} tickets for {artist}, £{price}, AXS transfer, paypal goods and services.",
+]
+
+
 def make(kind: str) -> dict:
-    """kind: genuine | messy | scam | sneaky"""
-    is_scam = kind in ("scam", "sneaky")
+    """kind: genuine | messy | short_genuine | scam | sneaky | vague"""
+    is_scam = kind in ("scam", "sneaky", "vague")
     face = random.choice([45, 55, 70, 85, 95, 120, 150])
     if kind == "scam":
         price = int(face * random.uniform(0.35, 0.85))
@@ -202,6 +239,10 @@ def make(kind: str) -> dict:
         parts = [pick(SCAM_OPENERS), pick(SCAM_DETAILS), pick(SCAM_REASONS),
                  pick(UNSAFE_PAYMENT), pick(SCAM_DELIVERY, 0.8),
                  pick(SCAM_EXTRAS, 0.7), pick(SCAM_EXTRAS, 0.3)]
+    elif kind == "vague":
+        parts = [pick(VAGUE_SCAM), pick(SCAM_EXTRAS, 0.3)]
+    elif kind == "short_genuine":
+        parts = [pick(SHORT_GENUINE)]
     else:  # sneaky
         flag = pick(SNEAKY_FLAGS)
         if "PDF" in flag:  # vary the wording so the model can't memorise one sentence
@@ -212,8 +253,11 @@ def make(kind: str) -> dict:
     text = " ".join(p for p in parts if p).format(
         n=random.choice([1, 2, 2, 3, 4]), artist=random.choice(ARTISTS),
         venue=random.choice(VENUES), section=seat, price=price)
-    has_seat = int("Row" in seat)
+    has_seat = int("Row" in seat and "Row" in text)
     mentions_pdf = "pdf" in text.lower()
+    # v2.3: price often isn't stated in real posts -> ratio unknown (treated as 1.0)
+    price_known = "£" in text and random.random() > (0.4 if is_scam else 0.15)
+    ratio = round(price / face, 2) if price_known else 1.0
 
     # --- seller account ---
     sudden = 0
@@ -230,12 +274,14 @@ def make(kind: str) -> dict:
         followers = random.choice([random.randint(100, 1500), random.randint(100, 1500), random.randint(5, 40)])
 
     return dict(text=text, account_age_days=age, followers=followers, sudden_seller=sudden,
-                price_ratio=round(price / face, 2), has_seat_details=has_seat,
+                price_ratio=ratio, has_seat_details=has_seat,
                 **event_fields(is_scam, mentions_pdf), **channel_fields(kind), label=int(is_scam))
 
 
 rows = ([make("genuine") for _ in range(240)] + [make("messy") for _ in range(70)] +
-        [make("scam") for _ in range(220)] + [make("sneaky") for _ in range(80)])
+        [make("short_genuine") for _ in range(60)] +
+        [make("scam") for _ in range(220)] + [make("sneaky") for _ in range(80)] +
+        [make("vague") for _ in range(80)])
 
 # ~3% label noise, because real-world labels are never perfect
 df = pd.DataFrame(rows).sample(frac=1, random_state=42).reset_index(drop=True)

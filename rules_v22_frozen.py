@@ -1,15 +1,11 @@
 """
-features.py - Layer 1: spot the red flags.
+rules_v22_frozen.py - FROZEN copy of the v2.2 red-flag rules (features.py as it was
+before the real-world test set was built). Do not edit.
 
-Turns a listing (text + seller details + event check result) into numbers the
-model can use, and a human-readable list of red flags for the explanation.
-Each rule is based on published scam-warning advice (Action Fraud, UK Finance,
-bank guidance, Which?) - cite those sources on your slides.
-
-Flag groups:
-  0. Where it's sold (from channels.py)
-  A. Payment          B. Language / behaviour
-  C. Seller account   D. Ticket evidence       E. Event (from event_check.py)
+Used by evaluate_real.py as the "Rules only (v2.2, written before seeing the test
+set)" approach, so the report always contains a rules result that was NOT tuned on
+the development set. Later rule versions were improved after studying that set,
+so their scores on it are optimistic.
 """
 from __future__ import annotations
 
@@ -21,8 +17,8 @@ import re
 TEXT_RULES = [
     # --- A. Payment ---
     ("unsafe_payment",
-     r"bank transfer|friends (and|&) family|\bf&f\b|\bff\b|gift ?card|crypto|bitcoin|\busdt\b|"
-     r"revolut me|monzo me|paypal family|(amazon|itunes|apple|steam|google play) (gift )?card",
+     r"bank transfer|friends (and|&) family|\bf&f\b|\bff\b|gift ?card|crypto|bitcoin|"
+     r"revolut me|monzo me|paypal family",
      "Asks for a payment method with no buyer protection"),
     ("payment_switch",
      r"paypal (is |isn'?t |is not |not )?(working|down|blocked|restricted|limited)|"
@@ -31,9 +27,8 @@ TEXT_RULES = [
      "Switches you away from a protected payment method"),
     ("deposit_or_hold",
      r"deposit|holding fee|hold (them|it|the tickets?) for|part[- ]?payment|half now|"
-     r"pay half|reserve (them|it|the tickets?) (for|with)|up ?front|full amount|"
-     r"(pay|payment) (first|before)|to (secure|reserve) (them|it|your|the)",
-     "Asks for a deposit or payment up front to 'hold' the tickets"),
+     r"pay half|reserve (them|it|the tickets?) (for|with)",
+     "Asks for a deposit or 'holding' payment"),
     ("hide_reference",
      r"(don'?t|do not|dont) (put|mention|write|say|use) .{0,25}(tickets?|reference)|"
      r"leave the reference (blank|empty)|no reference|(send|mark) (it |the payment )?as (a )?gift|"
@@ -42,22 +37,17 @@ TEXT_RULES = [
 
     # --- B. Language / behaviour ---
     ("urgency",
-     r"first to pay|loads of (people|messages|interest)|lot of interest|quick(ly)?|asap|today only|"
-     r"gone fast|won'?t last|serious buyers only|others (are )?asking|first come,? first served|"
-     r"(need|want) (the )?payment today|before they'?re gone|limited (release|availability)",
+     r"first to pay|loads of (people|messages)|quick(ly)?|asap|today only|gone fast|"
+     r"won'?t last|serious buyers only",
      "Uses pressure or urgency language"),
     ("off_platform",
-     r"whatsapp|telegram|\b(dm|pm|inbox) me\b|message me on|text me on|move to|"
-     r"private message|message (me|you) privately",
+     r"whatsapp|telegram|dm me|message me on|text me on|move to",
      "Tries to move the conversation off the platform"),
     ("send_after_payment",
-     r"after (payment|paying|you('ve)? pa(y|id)|u pay)|once paid|once (the )?payment|"
-     r"(send|transfer|email)(ed)? (them |it )?(straight )?after|emailed after|"
-     r"see the tickets after|as soon as (the )?payment",
+     r"after (payment|you pay)|once paid|send (them )?after|transfer (them )?after",
      "Will only send tickets after you pay"),
     ("sob_story",
-     r"can'?t go anymore|last minute|family emergency|work came up|\bill\b|covid|surgery|hospital|"
-     r"\bflu\b|out of town|bailed|other plans|having a baby|unable to attend|can no longer attend",
+     r"can'?t go anymore|last minute|family emergency|work came up|\bill\b|covid",
      "Gives a sympathetic reason for selling (common scam script)"),
     ("trust_claims",
      r"100% (legit|genuine|real)|not a scam|legit seller|genuine seller|trusted seller|"
@@ -67,24 +57,6 @@ TEXT_RULES = [
      r"(verification|verify|6[- ]digit|security|whatsapp|login|log in) code|"
      r"send (me )?the code|code (i|we) (just )?sent|your (password|card details|log ?in details)",
      "Asks for a code or login details (account-takeover risk)"),
-
-    ("third_party_payment",
-     r"(friend|mate|cousin|brother|sister|colleague|partner)'?s? (bank )?account|"
-     r"account (is|was|has been) (frozen|blocked|restricted|locked)|pay (it )?into (my )?(another|a different)",
-     "Asks you to pay into someone else's account"),
-    ("cheap_wording",
-     r"reduced price|discount(ed)?|\bcheap\b|going cheap|bargain|below face",
-     "Pushes a cheap or discounted price without details"),
-    ("screenshot_proof",
-     r"screenshots?|pics? (attached|of the)|pictures? of the tickets|photo of the tickets",
-     "Offers screenshots or photos as 'proof' (easy to fake)"),
-    ("code_or_access_sale",
-     r"(presale|pre-sale|access|priority|ticket) codes?|registration fee|priority access|"
-     r"pre-?sale tickets",
-     "Sells presale codes or 'priority access' (official codes are never sold)"),
-    ("engagement_bait",
-     r"comment ['\"]?(interested|me|below)|like (this|the) post|drop a comment|share (this|the) post",
-     "Asks you to like or comment first (used to find targets)"),
 
     # --- D. Ticket evidence (text part) ---
     # Only counts as a red flag when the event uses app-only tickets (see all_flags).
@@ -97,10 +69,7 @@ TEXT_RULES = [
 
 def text_flags(text: str) -> dict:
     t = text.lower()
-    flags = {name: int(bool(re.search(pattern, t))) for name, pattern, _ in TEXT_RULES}
-    # Real scam posts are often tiny and vague: no price, no details, just "PM me".
-    flags["vague_listing"] = int(len(t.split()) < 15 and not re.search(r"[£$€]\s?\d|\d+\s?(each|quid)", t))
-    return flags
+    return {name: int(bool(re.search(pattern, t))) for name, pattern, _ in TEXT_RULES}
 
 
 # ---------------------------------------------------------------------------
@@ -158,7 +127,6 @@ def channel_flags(channel: dict | None) -> dict:
 # Descriptions, column order, helpers
 # ---------------------------------------------------------------------------
 TEXT_DESCRIPTIONS = {name: desc for name, _, desc in TEXT_RULES if desc}
-TEXT_DESCRIPTIONS["vague_listing"] = "Very short, vague post with no price or details"
 SELLER_DESCRIPTIONS = {
     "new_account": "Seller account is less than 2 months old",
     "few_followers": "Seller has very few followers / little history",
@@ -192,7 +160,7 @@ PROTECTIVE = {"official_platform"}  # good signs: shown with a tick, not a red f
 # Design choice: these are so strongly linked to fraud that we don't want the
 # model to talk us out of them. The model's score is still shown honestly.
 HARD_STOPS = {"asks_for_codes", "hide_reference", "event_mismatch", "format_mismatch",
-              "lookalike_link", "third_party_payment", "code_or_access_sale"}
+              "lookalike_link"}
 
 
 def all_flags(text, account_age_days, followers, price_ratio, has_seat_details,

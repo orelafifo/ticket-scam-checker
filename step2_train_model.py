@@ -1,32 +1,35 @@
 """
-step2_train_model.py - Layer 2: train and test the scam classifier.
+step2_train_model.py - Layer 2: train the scam decision model (v2.4).
 
-Model: TF-IDF on the listing text + all red-flag features (payment, language,
-seller, ticket evidence, event checks) -> logistic regression.
-Simple, fast, and explainable (you can show which words/flags push the score up).
+v2.4 (after the independent held-out test exposed overfitting):
+  * The model now uses the red-flag / good-sign features only (no individual words).
+  * It learns mainly from REAL examples - the 120 published-case rows in
+    data/real_test_set.csv and data/heldout_test_set.csv, which are now TRAINING
+    data - with the synthetic listings as low-weight background.
+  * Red flags may only raise the risk, good signs may only lower it.
+  Evidence for these choices: python select_hybrid.py (grouped cross-validation).
+  Because those 120 rows are now used for training, a NEW blind test set is
+  needed to judge v2.4 (see PREREGISTRATION.md).
 
 Outputs:
   model/scam_model.joblib           - the trained model (used by the app)
-  outputs/confusion_matrix.png      - put this on a slide
-  outputs/top_features.png          - "what the model learned" slide
-  printed precision / recall report - quote these numbers in the video
+  outputs/confusion_matrix.png      - synthetic test split (for continuity with v2.3)
+  outputs/top_features.png          - "what the model learned" slide (flag weights)
 """
 from pathlib import Path
 
 import joblib
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (ConfusionMatrixDisplay, classification_report,
-                             precision_score, recall_score)
+from sklearn.metrics import ConfusionMatrixDisplay, precision_score, recall_score
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
 
-from features import FLAG_COLUMNS, HARD_STOPS, all_flags
+from channels import channel_info
+from features import ALL_DESCRIPTIONS, FLAG_COLUMNS, HARD_STOPS, all_flags
+from hybrid_model import REAL_WEIGHT, HybridModel
 
-THRESHOLD = 0.4  # below 0.5 on purpose: missing a scam costs more than a false alarm
+THRESHOLD = 0.4  # confirmed by grouped cross-validation (0.3 / 0.4 / 0.5 / 0.6 compared)
 
 
 def tri(v):
@@ -46,62 +49,63 @@ def row_to_channel(r) -> dict:
                 insecure_or_short=bool(r.ch_insecure_or_short))
 
 
-df = pd.read_csv("data/listings.csv")
-flags = df.apply(lambda r: all_flags(r.text, r.account_age_days, r.followers, r.price_ratio,
-                                     r.has_seat_details, r.sudden_seller, row_to_event(r),
-                                     row_to_channel(r)), axis=1)
-# (sudden_seller is both a raw column and a flag, so drop raw copies before joining)
-df = pd.concat([df.drop(columns=[c for c in FLAG_COLUMNS if c in df.columns]),
-                pd.DataFrame(list(flags))], axis=1)
+def _num(v, default):
+    return default if pd.isna(v) or v == "" else float(v)
 
-print("How often each flag fires (scam rate when it fires):")
-summary = pd.DataFrame({"fires": df[FLAG_COLUMNS].sum(),
-                        "scam_rate": [df.loc[df[c] == 1, "label"].mean() for c in FLAG_COLUMNS]})
-print(summary.round(2).to_string(), "\n")
 
-X, y = df[["text"] + FLAG_COLUMNS], df["label"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y, random_state=42)
+def real_row_flags(r) -> dict:
+    """Flags for a real-world row (unknown seller details = neutral; event check off)."""
+    p, f = _num(r.price, 0), _num(r.face_value, 0)
+    ch = channel_info(r.platform, r.link if isinstance(r.link, str) else "", check_age=False)
+    return all_flags(r.text, _num(r.account_age_days, 365), _num(r.followers, 200),
+                     p / f if p and f else 1.0, int(r.has_seat_details), int(r.sudden_seller), None, ch)
 
-model = Pipeline([
-    ("features", ColumnTransformer([
-        ("words", TfidfVectorizer(ngram_range=(1, 2), min_df=2), "text"),
-        ("flags", "passthrough", FLAG_COLUMNS),
-    ])),
-    ("clf", LogisticRegression(max_iter=1000, class_weight="balanced")),
-])
-model.fit(X_train, y_train)
 
-# ---- Evaluate: model alone ----
-proba = model.predict_proba(X_test)[:, 1]
-pred = (proba >= THRESHOLD).astype(int)
-print("MODEL ONLY")
-print(classification_report(y_test, pred, target_names=["genuine", "scam"]))
-print(f"Scam recall (share of scams caught): {recall_score(y_test, pred):.0%}")
-print(f"Scam precision (share of alerts that were real scams): {precision_score(y_test, pred):.0%}\n")
+# ---------------------------------------------------------------- synthetic background data
+syn = pd.read_csv("data/listings.csv")
+syn_flags = pd.DataFrame([all_flags(r.text, r.account_age_days, r.followers, r.price_ratio,
+                                    r.has_seat_details, r.sudden_seller, row_to_event(r), row_to_channel(r))
+                          for r in syn.itertuples()])
+S = pd.concat([syn[["text"]], syn_flags], axis=1)
+yS = syn["label"].values
 
-# ---- Evaluate: model + hard-stop rules ----
-hard = X_test[list(HARD_STOPS)].max(axis=1).values
-pred_hs = ((pred == 1) | (hard == 1)).astype(int)
-print("MODEL + HARD-STOP RULES")
-print(f"Scam recall: {recall_score(y_test, pred_hs):.0%}   "
-      f"precision: {precision_score(y_test, pred_hs):.0%}\n")
+# ---------------------------------------------------------------- real examples (main teacher)
+real = pd.concat([pd.read_csv(f) for f in ["data/real_test_set.csv", "data/heldout_test_set.csv"]
+                  if Path(f).exists()], ignore_index=True)
+R = pd.concat([real[["text"]], pd.DataFrame([real_row_flags(r) for r in real.itertuples()])], axis=1)
+yR = real["label"].values
+print(f"Training data: {len(R)} real-world rows (weight x{REAL_WEIGHT}) + {len(S)} synthetic rows (weight x1)")
+
+# ---------------------------------------------------------------- synthetic test split (continuity)
+S_tr, S_te, y_tr, y_te = train_test_split(S, yS, test_size=0.25, stratify=yS, random_state=42)
+check = HybridModel().fit(pd.concat([S_tr, R], ignore_index=True), np.r_[y_tr, yR],
+                          np.r_[np.ones(len(S_tr)), np.full(len(R), REAL_WEIGHT)])
+pred = ((check.predict_proba(S_te)[:, 1] >= THRESHOLD) | (S_te[list(HARD_STOPS)].max(axis=1).values == 1)).astype(int)
+print(f"Synthetic test split: recall {recall_score(y_te, pred):.0%}, precision {precision_score(y_te, pred):.0%}")
+print("Real-world performance: see `python select_hybrid.py` (grouped cross-validation) and the NEW blind test.\n")
 
 Path("outputs").mkdir(exist_ok=True)
-disp = ConfusionMatrixDisplay.from_predictions(y_test, pred, display_labels=["Genuine", "Scam"],
+disp = ConfusionMatrixDisplay.from_predictions(y_te, pred, display_labels=["Genuine", "Scam"],
                                                cmap="Blues", colorbar=False)
-disp.ax_.set_title("Ticket scam checker - test set results")
+disp.ax_.set_title("Synthetic test split (v2.4)")
 plt.tight_layout(); plt.savefig("outputs/confusion_matrix.png", dpi=200); plt.close()
 
-# ---- What did the model learn? (top features pushing towards "scam") ----
-names = model.named_steps["features"].get_feature_names_out()
-coefs = model.named_steps["clf"].coef_[0]
-top = (pd.Series(coefs, index=[n.split("__", 1)[1] for n in names])
-       .sort_values(ascending=False).head(15)[::-1])
-top.plot.barh(figsize=(7, 6), color="#c0392b")
-plt.title("Top signals the model links to scams"); plt.xlabel("Model weight")
+# ---------------------------------------------------------------- final model on everything
+model = HybridModel().fit(pd.concat([S, R], ignore_index=True), np.r_[yS, yR],
+                          np.r_[np.ones(len(S)), np.full(len(R), REAL_WEIGHT)])
+
+w = model.weights()
+w = w[w != 0]
+top = w.head(15)[::-1]
+plt.figure(figsize=(8, 6))
+plt.barh([ALL_DESCRIPTIONS[k][:55] for k in top.index], top.values, color="#2a78d6")
+plt.title("What the model learned: weight of each red flag", loc="left")
+plt.xlabel("Weight (higher = raises the risk more)")
+plt.gca().spines[["top", "right"]].set_visible(False)
 plt.tight_layout(); plt.savefig("outputs/top_features.png", dpi=200); plt.close()
-print("Top 15 signals:", ", ".join(top.index[::-1]))
+print("Top signals:", ", ".join(w.head(10).index))
+print("Good signs:", ", ".join(w[w < 0].index) or "none")
 
 Path("model").mkdir(exist_ok=True)
-joblib.dump({"model": model, "threshold": THRESHOLD}, "model/scam_model.joblib")
+joblib.dump({"model": model, "threshold": THRESHOLD, "version": "2.4"}, "model/scam_model.joblib")
 print("Saved model/scam_model.joblib and charts in outputs/")
