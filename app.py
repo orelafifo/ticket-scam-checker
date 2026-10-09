@@ -65,8 +65,15 @@ seat = ticket_type in ("Standing", "Seated – block/row/seat given")
 # ---------------- 4. The seller ----------------
 st.subheader("The seller")
 s1, s2 = st.columns(2)
-age = s1.number_input("Seller account age (days)", 0, 10000, 30)
-followers = s2.number_input("Seller followers", 0, 1000000, 20)
+age_unknown = s1.checkbox("I don't know the account age")
+age = s1.number_input("Seller account age (days)", 0, 10000, 30, disabled=age_unknown)
+followers_unknown = s2.checkbox("I don't know the follower count")
+followers = s2.number_input("Seller followers", 0, 1000000, 20, disabled=followers_unknown)
+# Unknown = neutral (no red flag), the same values used for unknown details in training
+if age_unknown:
+    age = 365
+if followers_unknown:
+    followers = 200
 sudden = st.checkbox("It's an older account that has suddenly started selling tickets "
                      "(e.g. a friend's account posting out of character)")
 
