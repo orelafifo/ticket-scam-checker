@@ -29,7 +29,8 @@ bundle = joblib.load("model/scam_model.joblib")
 model, threshold = bundle["model"], bundle["threshold"]
 
 st.title("🎟️ Ticket Scam Checker")
-st.caption("Paste a resale listing before you pay. Prototype - synthetic training data.")
+st.caption("Paste a resale listing before you pay. Prototype – trained on 120 real published "
+           "scam cases plus synthetic examples. A warning tool, not a guarantee: always pay with buyer protection.")
 
 # ---------------- 1. Where are you buying? ----------------
 st.subheader("Where are you buying?")
@@ -55,7 +56,11 @@ sellers = st.multiselect("Who sells the OFFICIAL tickets? Pick all that apply - 
 p1, p2 = st.columns(2)
 price = p1.number_input("Asking price (£ per ticket)", 0.0, 5000.0, 40.0)
 face = p2.number_input("Face value (£ per ticket, 0 = look it up)", 0.0, 5000.0, 0.0)
-seat = st.checkbox("Listing gives section / row / seat details")
+ticket_type = st.selectbox("Ticket type", ["Not stated", "Standing",
+                                           "Seated – block/row/seat given",
+                                           "Seated – no block/row/seat given"])
+# Standing tickets have no seat, so that counts as complete details (no red flag)
+seat = ticket_type in ("Standing", "Seated – block/row/seat given")
 
 # ---------------- 4. The seller ----------------
 st.subheader("The seller")
