@@ -6,9 +6,9 @@ Test file: `data/blind3_test_set.csv` - 20 scams, 20 genuine, built by an indepe
 |---|---|---|---|---|
 | Rules only | 14/20 | 74% | 72% | 5/20 |
 | Text model only | 20/20 | 62% | 77% | 12/20 |
+| AI only (Gemini) | 20/20 | 87% | 93% | 3/20 |
 | Hybrid v2.4 | 11/20 | 85% | 67% | 2/20 |
 | **Hybrid v2.5** | **14/20** | **78%** | **74%** | **4/20** |
-| AI only (Gemini) | not run yet (needs GEMINI_API_KEY) | | | |
 
 Examples where v2.4 and v2.5 disagree: 5
 - C17 (scam): v2.4 no alert (score 0.37), v2.5 alert (score 0.40)

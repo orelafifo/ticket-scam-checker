@@ -1,0 +1,202 @@
+{
+ "C01": {
+  "scam_probability": 0.98,
+  "reason": "Social media comment resale directly contradicts the artist's exclusive official ticketing policy.",
+  "model": "gemini-flash-latest"
+ },
+ "C02": {
+  "scam_probability": 0.85,
+  "reason": "DICE manages waitlists automatically in-app; individuals cannot post custom resale listings.",
+  "model": "gemini-flash-latest"
+ },
+ "C03": {
+  "scam_probability": 0.85,
+  "reason": "Classic script using emotional appeals to push unprotected off-platform ticket transfer sales.",
+  "model": "gemini-flash-latest"
+ },
+ "C04": {
+  "scam_probability": 0.98,
+  "reason": "Classic Facebook event comment scam falsely offering cheap tickets from a fake profile.",
+  "model": "gemini-flash-latest"
+ },
+ "C05": {
+  "scam_probability": 0.1,
+  "reason": "Low risk: reputable platform transfer, face value price, and university group context.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C06": {
+  "scam_probability": 0.95,
+  "reason": "Unsolicited offer from anonymous account with unrealistically low pricing.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C07": {
+  "scam_probability": 0.1,
+  "reason": "Low risk; reasonable price, legitimate excuse, and safe transfer via box office.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C08": {
+  "scam_probability": 1,
+  "reason": "Bank transfer payment on X, followed by immediate blocking and ghosting.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C09": {
+  "scam_probability": 0.2,
+  "reason": "Low risk; uses legitimate platform transfer (See Tickets) and face value.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C10": {
+  "scam_probability": 0.99,
+  "reason": "High-risk payment via TWINT and use of faked ticket-transfer app proof.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C11": {
+  "scam_probability": 1,
+  "reason": "Compromised account selling high-demand tickets via bank transfer; classic scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C12": {
+  "scam_probability": 0.99,
+  "reason": "Hacked account, spelling errors, face value urgency, and bank transfer request.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C31": {
+  "scam_probability": 0.1,
+  "reason": "Likely genuine fan posting about their official resale listing.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C13": {
+  "scam_probability": 0.98,
+  "reason": "Switching from PayPal to bank transfer with mismatched account names is classic fraud.",
+  "model": "gemini-flash-latest"
+ },
+ "C14": {
+  "scam_probability": 0.03,
+  "reason": "Official fanSALE platform guarantees verified ticket re-issuing and buyer protection.",
+  "model": "gemini-flash-latest"
+ },
+ "C15": {
+  "scam_probability": 0.0,
+  "reason": "Official platform fan-to-fan resale with transparent pricing.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C16": {
+  "scam_probability": 0.1,
+  "reason": "Requires transfer via official club exchange at face value, indicating a legitimate transaction.",
+  "model": "gemini-flash-latest"
+ },
+ "C17": {
+  "scam_probability": 1.0,
+  "reason": "Off-platform communication, payment taken, and fake excuse refusing ticket delivery.",
+  "model": "gemini-flash-latest"
+ },
+ "C18": {
+  "scam_probability": 0.99,
+  "reason": "Hacked account demanding multiple fabricated fees after payment indicates an advance-fee scam.",
+  "model": "gemini-flash-latest"
+ },
+ "C19": {
+  "scam_probability": 0.95,
+  "reason": "Facebook comment selling sold-out Irish tickets using US dollars indicates likely scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C20": {
+  "scam_probability": 0.0,
+  "reason": "Listing directly through official platform resale at face value is secure.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C21": {
+  "scam_probability": 0.99,
+  "reason": "Deleted page, below-market price, and Revolut payment strongly indicate a scam.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C22": {
+  "scam_probability": 0.1,
+  "reason": "Uses PayPal Goods & Services and offers in-person meeting.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C23": {
+  "scam_probability": 0.0,
+  "reason": "Official verified fan resale on authorized primary platform.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C24": {
+  "scam_probability": 0.1,
+  "reason": "Reasonable price, safe transfer method, and in-person meeting offered.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C25": {
+  "scam_probability": 0.1,
+  "reason": "Face value, local hand delivery, and physical tickets suggest a low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C26": {
+  "scam_probability": 0.85,
+  "reason": "Facebook is high-risk for ticket scams; vague details and multiple tickets.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C27": {
+  "scam_probability": 0.85,
+  "reason": "Digital NFC ticket transfer via classified ads with upfront payment is high risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C28": {
+  "scam_probability": 0.0,
+  "reason": "Official platform resale with face value cap indicates low risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C29": {
+  "scam_probability": 1,
+  "reason": "Facebook payment via Revolut with no tickets delivered indicates high fraud risk.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C30": {
+  "scam_probability": 0.05,
+  "reason": "Twickets is a face-value resale platform with secure transfer mechanisms.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C32": {
+  "scam_probability": 1,
+  "reason": "Fake profile, changing ticket numbers, Revolut payment, and user blocked after paying.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C33": {
+  "scam_probability": 0.05,
+  "reason": "Low risk as seller uses official resale platform ensuring buyer protection.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C34": {
+  "scam_probability": 1,
+  "reason": "Classic advance-fee ticket scam on Facebook with name-change fee and blocking.",
+  "model": "gemini-flash-lite-latest"
+ },
+ "C35": {
+  "scam_probability": 0.9,
+  "reason": "High-demand event tickets on Facebook frequently involve fraud without verified resale platform protection.",
+  "model": "gemini-3-flash-preview"
+ },
+ "C36": {
+  "scam_probability": 0.99,
+  "reason": "Bank transfer requested, impossible transfer claims, and duplicate screenshots used by multiple sellers.",
+  "model": "gemini-3-flash-preview"
+ },
+ "C37": {
+  "scam_probability": 0.05,
+  "reason": "Twickets is a secure, face-value platform; listing includes specific seat details.",
+  "model": "gemini-3-flash-preview"
+ },
+ "C38": {
+  "scam_probability": 1.0,
+  "reason": "Confirmed fake tickets sold via a now-deleted account for a high-demand sporting event.",
+  "model": "gemini-3-flash-preview"
+ },
+ "C39": {
+  "scam_probability": 0.05,
+  "reason": "Matches official See Tickets fan-to-fan resale policy and face-value pricing.",
+  "model": "gemini-3-flash-preview"
+ },
+ "C40": {
+  "scam_probability": 0.99,
+  "reason": "Hacked account, unrealistic price, and Ticketmaster access offer are classic scam indicators.",
+  "model": "gemini-3-flash-preview"
+ }
+}

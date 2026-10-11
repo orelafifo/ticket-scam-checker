@@ -1,41 +1,41 @@
-id,label,source_type,platform,source,v24_score,v25_score,hard_stop,Rules only,Text model only,Hybrid v2.4,Hybrid v2.5
-C01,1,reconstructed,"Facebook (post, group or Marketplace)",Hartlepool Mail 2022,0.18,0.16,False,0,1,0,0
-C02,0,constructed_genuine,DICE,constructed,0.0,0.0,False,0,0,0,0
-C03,0,real_genuine,Gumtree or other classified ads,Stardew Valley Forums 2026,0.18,0.16,False,0,1,0,0
-C04,1,reconstructed,"Facebook (post, group or Marketplace)",Hello Rayo Norfolk 2024,0.83,0.83,False,1,1,1,1
-C05,0,constructed_genuine,WhatsApp,constructed,0.5,0.52,False,1,1,1,1
-C06,1,reconstructed,X (Twitter),Hold The Front Page 2022,0.18,0.16,False,0,1,0,0
-C07,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.11,0.12,False,1,1,0,0
-C08,1,reconstructed,X (Twitter),Cardiff News Plus 2024,0.61,0.62,False,1,1,1,1
-C09,0,constructed_genuine,X (Twitter),constructed,0.18,0.16,False,0,1,0,0
-C10,1,verbatim,"Facebook (post, group or Marketplace)",Swiss NCSC 2023,0.18,0.16,False,0,1,0,0
-C11,1,reconstructed,"Facebook (post, group or Marketplace)",Isle of Man Today 2025,0.79,0.82,False,1,1,1,1
-C12,1,reconstructed,"Facebook (post, group or Marketplace)",ITV News Wales 2024,1.0,1.0,False,1,1,1,1
-C13,1,reconstructed,"Facebook (post, group or Marketplace)",Financial Ombudsman DRN-3463607 2022,0.75,0.95,False,1,1,1,1
-C14,0,constructed_genuine,"Other official seller (Eventim, Gigantic...)",constructed,0.0,0.0,False,0,1,0,0
-C15,0,constructed_genuine,Ticketmaster / Ticketmaster Resale,constructed,0.0,0.0,False,0,1,0,0
-C16,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.04,0.04,False,0,0,0,0
-C17,1,reconstructed,Instagram,Donegal News 2025,0.37,0.4,False,1,1,0,1
-C18,1,reconstructed,"Facebook (post, group or Marketplace)",Financial Ombudsman DRN-5299859 2024,0.99,0.99,False,1,1,1,1
-C19,1,reconstructed,"Facebook (post, group or Marketplace)",Midlands 103 2023,0.18,0.16,False,0,1,0,0
-C20,0,constructed_genuine,Skiddle,constructed,0.02,0.01,False,0,0,0,0
-C21,1,reconstructed,"Facebook (post, group or Marketplace)",Limerick Post 2024,0.18,0.16,False,0,1,0,0
-C22,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.37,0.4,False,1,1,0,1
-C23,0,constructed_genuine,Ticketmaster / Ticketmaster Resale,constructed,0.0,0.0,False,0,1,0,0
-C24,0,constructed_genuine,Gumtree or other classified ads,constructed,0.04,0.04,False,0,0,0,0
-C25,0,real_genuine,Gumtree or other classified ads,Harringay Online 2017,0.04,0.04,False,0,1,0,0
-C26,1,verbatim,"Facebook (post, group or Marketplace)",Scamwatch (ACCC) 2024,0.99,0.98,False,1,1,1,1
-C27,0,real_genuine,Gumtree or other classified ads,Reddit r/GunnersatGames 2026,0.37,0.4,False,1,1,0,1
-C28,0,constructed_genuine,AXS / AXS Official Resale,constructed,0.0,0.0,False,0,0,0,0
-C29,1,reconstructed,"Facebook (post, group or Marketplace)",Gibraltar Chronicle 2023,0.18,0.16,False,0,1,0,0
-C30,0,constructed_genuine,Twickets,constructed,0.0,0.0,False,0,0,0,0
-C31,0,real_genuine,"Other official seller (Eventim, Gigantic...)",Reddit r/GunnersatGames 2026,0.0,0.0,False,0,1,0,0
-C32,1,reconstructed,"Facebook (post, group or Marketplace)",Armagh I 2022,0.37,0.4,False,1,1,0,1
-C33,0,constructed_genuine,Instagram,constructed,0.5,0.52,False,1,0,1,1
-C34,1,reconstructed,"Facebook (post, group or Marketplace)",Coventry Telegraph 2023,0.37,0.4,False,1,1,0,1
-C35,1,verbatim,"Facebook (post, group or Marketplace)",Scamwatch (ACCC) 2024,0.99,0.98,False,1,1,1,1
-C36,1,reconstructed,"Facebook (post, group or Marketplace)",CMU 2025,0.93,0.93,False,1,1,1,1
-C37,0,constructed_genuine,Twickets,constructed,0.02,0.01,False,0,0,0,0
-C38,1,reconstructed,X (Twitter),People Daily 2022,0.5,0.52,False,1,1,1,1
-C39,0,constructed_genuine,See Tickets,constructed,0.02,0.01,False,0,1,0,0
-C40,1,verbatim,"Facebook (post, group or Marketplace)",Music Times 2024,0.79,0.82,False,1,1,1,1
+id,label,source_type,platform,source,v24_score,v25_score,hard_stop,Rules only,Text model only,AI only (Gemini),Hybrid v2.4,Hybrid v2.5
+C01,1,reconstructed,"Facebook (post, group or Marketplace)",Hartlepool Mail 2022,0.18,0.16,False,0,1,1,0,0
+C02,0,constructed_genuine,DICE,constructed,0.0,0.0,False,0,0,1,0,0
+C03,0,real_genuine,Gumtree or other classified ads,Stardew Valley Forums 2026,0.18,0.16,False,0,1,1,0,0
+C04,1,reconstructed,"Facebook (post, group or Marketplace)",Hello Rayo Norfolk 2024,0.83,0.83,False,1,1,1,1,1
+C05,0,constructed_genuine,WhatsApp,constructed,0.5,0.52,False,1,1,0,1,1
+C06,1,reconstructed,X (Twitter),Hold The Front Page 2022,0.18,0.16,False,0,1,1,0,0
+C07,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.11,0.12,False,1,1,0,0,0
+C08,1,reconstructed,X (Twitter),Cardiff News Plus 2024,0.61,0.62,False,1,1,1,1,1
+C09,0,constructed_genuine,X (Twitter),constructed,0.18,0.16,False,0,1,0,0,0
+C10,1,verbatim,"Facebook (post, group or Marketplace)",Swiss NCSC 2023,0.18,0.16,False,0,1,1,0,0
+C11,1,reconstructed,"Facebook (post, group or Marketplace)",Isle of Man Today 2025,0.79,0.82,False,1,1,1,1,1
+C12,1,reconstructed,"Facebook (post, group or Marketplace)",ITV News Wales 2024,1.0,1.0,False,1,1,1,1,1
+C13,1,reconstructed,"Facebook (post, group or Marketplace)",Financial Ombudsman DRN-3463607 2022,0.75,0.95,False,1,1,1,1,1
+C14,0,constructed_genuine,"Other official seller (Eventim, Gigantic...)",constructed,0.0,0.0,False,0,1,0,0,0
+C15,0,constructed_genuine,Ticketmaster / Ticketmaster Resale,constructed,0.0,0.0,False,0,1,0,0,0
+C16,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.04,0.04,False,0,0,0,0,0
+C17,1,reconstructed,Instagram,Donegal News 2025,0.37,0.4,False,1,1,1,0,1
+C18,1,reconstructed,"Facebook (post, group or Marketplace)",Financial Ombudsman DRN-5299859 2024,0.99,0.99,False,1,1,1,1,1
+C19,1,reconstructed,"Facebook (post, group or Marketplace)",Midlands 103 2023,0.18,0.16,False,0,1,1,0,0
+C20,0,constructed_genuine,Skiddle,constructed,0.02,0.01,False,0,0,0,0,0
+C21,1,reconstructed,"Facebook (post, group or Marketplace)",Limerick Post 2024,0.18,0.16,False,0,1,1,0,0
+C22,0,constructed_genuine,"Facebook (post, group or Marketplace)",constructed,0.37,0.4,False,1,1,0,0,1
+C23,0,constructed_genuine,Ticketmaster / Ticketmaster Resale,constructed,0.0,0.0,False,0,1,0,0,0
+C24,0,constructed_genuine,Gumtree or other classified ads,constructed,0.04,0.04,False,0,0,0,0,0
+C25,0,real_genuine,Gumtree or other classified ads,Harringay Online 2017,0.04,0.04,False,0,1,0,0,0
+C26,1,verbatim,"Facebook (post, group or Marketplace)",Scamwatch (ACCC) 2024,0.99,0.98,False,1,1,1,1,1
+C27,0,real_genuine,Gumtree or other classified ads,Reddit r/GunnersatGames 2026,0.37,0.4,False,1,1,1,0,1
+C28,0,constructed_genuine,AXS / AXS Official Resale,constructed,0.0,0.0,False,0,0,0,0,0
+C29,1,reconstructed,"Facebook (post, group or Marketplace)",Gibraltar Chronicle 2023,0.18,0.16,False,0,1,1,0,0
+C30,0,constructed_genuine,Twickets,constructed,0.0,0.0,False,0,0,0,0,0
+C31,0,real_genuine,"Other official seller (Eventim, Gigantic...)",Reddit r/GunnersatGames 2026,0.0,0.0,False,0,1,0,0,0
+C32,1,reconstructed,"Facebook (post, group or Marketplace)",Armagh I 2022,0.37,0.4,False,1,1,1,0,1
+C33,0,constructed_genuine,Instagram,constructed,0.5,0.52,False,1,0,0,1,1
+C34,1,reconstructed,"Facebook (post, group or Marketplace)",Coventry Telegraph 2023,0.37,0.4,False,1,1,1,0,1
+C35,1,verbatim,"Facebook (post, group or Marketplace)",Scamwatch (ACCC) 2024,0.99,0.98,False,1,1,1,1,1
+C36,1,reconstructed,"Facebook (post, group or Marketplace)",CMU 2025,0.93,0.93,False,1,1,1,1,1
+C37,0,constructed_genuine,Twickets,constructed,0.02,0.01,False,0,0,0,0,0
+C38,1,reconstructed,X (Twitter),People Daily 2022,0.5,0.52,False,1,1,1,1,1
+C39,0,constructed_genuine,See Tickets,constructed,0.02,0.01,False,0,1,0,0,0
+C40,1,verbatim,"Facebook (post, group or Marketplace)",Music Times 2024,0.79,0.82,False,1,1,1,1,1
