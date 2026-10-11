@@ -116,6 +116,7 @@ def seller_flags(account_age_days: float, followers: float, price_ratio: float,
         "few_followers": int(followers < 50),
         "sudden_seller": int(bool(sudden_seller)),
         "too_cheap": int(price_ratio < 0.8),
+        "very_cheap": int(price_ratio < 0.5),   # v2.5: "too good to be true" price
         "no_seat_details": int(not has_seat_details),
     }
 
@@ -163,7 +164,8 @@ SELLER_DESCRIPTIONS = {
     "new_account": "Seller account is less than 2 months old",
     "few_followers": "Seller has very few followers / little history",
     "sudden_seller": "Established account suddenly selling tickets (possible hacked account)",
-    "too_cheap": "Price is well below face value for an in-demand show",
+    "too_cheap": "Price is below 80% of face value",
+    "very_cheap": "Price is less than half of face value - too good to be true",
     "no_seat_details": "No section, row or seat details given",
 }
 EVENT_DESCRIPTIONS = {
@@ -187,6 +189,29 @@ ALL_DESCRIPTIONS = {**CHANNEL_DESCRIPTIONS, **TEXT_DESCRIPTIONS, **SELLER_DESCRI
 FLAG_COLUMNS = (list(CHANNEL_DESCRIPTIONS) + list(TEXT_DESCRIPTIONS) +
                 list(SELLER_DESCRIPTIONS) + list(EVENT_DESCRIPTIONS))
 PROTECTIVE = {"official_platform"}  # good signs: shown with a tick, not a red flag
+V24_FLAG_COLUMNS = [c for c in FLAG_COLUMNS if c != "very_cheap"]   # v2.4 used these 33
+
+# ---------------------------------------------------------------------------
+# v2.5: expert evidence tiers (agreed with Orela, 9 Oct 2026). Each red flag starts
+# from its tier's weight ("informative prior"); training on real examples then
+# adjusts it. Sources for each tier: see TIER_SOURCES.md.
+# ---------------------------------------------------------------------------
+TIERS = {
+    "hard_stop": ["asks_for_codes", "lookalike_link", "third_party_payment", "hide_reference",
+                  "event_mismatch", "code_or_access_sale", "format_mismatch"],
+    "strong": ["unsafe_payment", "payment_switch", "deposit_or_hold", "sudden_seller",
+               "unknown_website", "new_domain", "very_cheap",
+               "event_not_found", "before_on_sale"],
+    "moderate": ["off_platform", "send_after_payment", "screenshot_proof", "vague_listing",
+                 "cheap_wording", "engagement_bait", "social_or_messaging", "sob_story",
+                 "insecure_or_short_link"],
+    "weak": ["new_account", "few_followers", "no_seat_details", "urgency", "trust_claims",
+             "too_cheap", "high_demand", "secondary_market"],
+    "good_sign": ["official_platform"],
+}
+TIER_PRIOR = {"hard_stop": 3.0, "strong": 2.5, "moderate": 1.5, "weak": 0.5, "good_sign": -2.0}
+PRIOR_WEIGHTS = {flag: TIER_PRIOR[tier] for tier, flags in TIERS.items() for flag in flags}
+assert set(PRIOR_WEIGHTS) == set(FLAG_COLUMNS), set(FLAG_COLUMNS) ^ set(PRIOR_WEIGHTS)
 
 # Rules that force the risk level to High, whatever the model says.
 # Design choice: these are so strongly linked to fraud that we don't want the

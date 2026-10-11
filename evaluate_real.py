@@ -92,8 +92,8 @@ preds, scores = {}, {}
 meaningful = [c for c in FLAG_COLUMNS if c not in WEAK_FLAGS and c not in PROTECTIVE]
 n_meaningful = flags[meaningful].sum(axis=1)
 hard = flags[list(HARD_STOPS)].max(axis=1)
-preds["Rules only (v2.4)"] = ((hard == 1) | (n_meaningful >= 2)).astype(int).values
-scores["Rules only (v2.4)"] = np.minimum(n_meaningful / 4, 1).values
+preds["Rules only (current rulebook)"] = ((hard == 1) | (n_meaningful >= 2)).astype(int).values
+scores["Rules only (current rulebook)"] = np.minimum(n_meaningful / 4, 1).values
 
 # ---------------------------------------------------------------- 1b. rules only, FROZEN v2.2
 # The same decision rule, but with the rulebook as it was BEFORE the development set
@@ -124,10 +124,11 @@ preds["Text model only"] = (scores["Text model only"] >= THRESHOLD).astype(int)
 
 # ---------------------------------------------------------------- 4. hybrid (the real checker)
 bundle = joblib.load("model/scam_model.joblib")
-if bundle.get("version") == "2.4" and not TEST_FILE.endswith("blind2_test_set.csv"):
-    raise SystemExit(f"Stopped: the v2.4 model was trained on {TEST_FILE}, so testing on it would be invalid "
-                     "and would overwrite your earlier results.\nUse: python evaluate_real.py --test "
-                     "data/blind2_test_set.csv")
+TRAINING_FILES = ("real_test_set.csv", "heldout_test_set.csv")   # v2.4+ learn from these
+if bundle.get("version") in ("2.4", "2.5") and TEST_FILE.endswith(TRAINING_FILES):
+    raise SystemExit(f"Stopped: the v{bundle.get('version')} model was trained on {TEST_FILE}, so testing on it would be invalid "
+                     "and would overwrite your earlier results.\nUse a blind test file, e.g. python evaluate_real.py "
+                     "--test data/blind3_test_set.csv")
 hybrid = bundle["model"]
 X = pd.concat([test[["text"]], flags], axis=1)[["text"] + FLAG_COLUMNS]
 scores["Hybrid (our checker)"] = hybrid.predict_proba(X)[:, 1]
@@ -194,7 +195,7 @@ if ai is not None:
 DEV_SET = TEST_FILE.endswith("real_test_set.csv")
 if not DEV_SET:  # held-out run: the same four approaches as the original comparison
     preds.pop("Rules only (v2.2 frozen)"); scores.pop("Rules only (v2.2 frozen)")
-ORDER = [k for k in ["Rules only (v2.2 frozen)", "Rules only (v2.4)", "Text model only", "AI only (Gemini)", "Hybrid (our checker)"] if k in preds]
+ORDER = [k for k in ["Rules only (v2.2 frozen)", "Rules only (current rulebook)", "Text model only", "AI only (Gemini)", "Hybrid (our checker)"] if k in preds]
 
 
 # ---------------------------------------------------------------- metrics
@@ -301,8 +302,8 @@ lines = [
     f"reconstructed from documented UK cases; {int((1 - y).sum())} constructed genuine listings). "
     "None were used in training.",
     "",
-    "'Rules only (v2.2 frozen)' uses the rulebook written BEFORE this test set existed; 'Rules only (v2.4)' uses "
-    "the current v2.4 rulebook. On the development set, only the frozen version is an untuned result.",
+    "'Rules only (v2.2 frozen)' uses the rulebook written BEFORE this test set existed; 'Rules only (current rulebook)' uses "
+    "the current rulebook. On the development set, only the frozen version is an untuned result.",
     "",
     "| Approach | Scams caught | Recall | Precision | F1 | False alarms |",
     "|---|---|---|---|---|---|",

@@ -4,11 +4,11 @@ Test file: `data/blind2_test_set.csv`
 
 Test set: 40 listings (20 scams from published sources: 4 verbatim, 16 reconstructed from documented UK cases; 20 constructed genuine listings). None were used in training.
 
-'Rules only (v2.2 frozen)' uses the rulebook written BEFORE this test set existed; 'Rules only (v2.4)' uses the current v2.4 rulebook. On the development set, only the frozen version is an untuned result.
+'Rules only (v2.2 frozen)' uses the rulebook written BEFORE this test set existed; 'Rules only (v2.3)' uses the current rulebook. On the development set, only the frozen version is an untuned result.
 
 | Approach | Scams caught | Recall | Precision | F1 | False alarms |
 |---|---|---|---|---|---|
-| Rules only (v2.4) | 17/20 | 85% | 77% | 81% | 5/20 |
+| Rules only (v2.3) | 17/20 | 85% | 77% | 81% | 5/20 |
 | Text model only | 20/20 | 100% | 59% | 74% | 14/20 |
 | Hybrid (our checker) | 17/20 | 85% | 81% | 83% | 4/20 |
 
@@ -18,7 +18,7 @@ Recall by source type:
 
 | Approach | Verbatim quotes | Reconstructed cases |
 |---|---|---|
-| Rules only (v2.4) | 75% | 88% |
+| Rules only (v2.3) | 75% | 88% |
 | Text model only | 100% | 100% |
 | Hybrid (our checker) | 50% | 94% |
 

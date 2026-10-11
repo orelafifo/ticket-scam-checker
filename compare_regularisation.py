@@ -27,7 +27,8 @@ from scipy.optimize import minimize
 from sklearn.model_selection import GroupKFold
 
 from channels import channel_info
-from features import FLAG_COLUMNS, HARD_STOPS, PROTECTIVE, all_flags
+from features import HARD_STOPS, PROTECTIVE, all_flags
+from features import V24_FLAG_COLUMNS as FLAG_COLUMNS   # the v2.4 evidence uses the 33 v2.4 features
 from hybrid_model import REAL_WEIGHT
 
 THRESHOLD = 0.4
@@ -69,9 +70,9 @@ def synth_flags(df):
 real = pd.concat([pd.read_csv("data/real_test_set.csv"), pd.read_csv("data/heldout_test_set.csv")],
                  ignore_index=True)
 real["group"] = real["source"].fillna("constructed").where(real.label == 1, real["id"])  # split by source
-R, yR = real_flags(real), real.label.values
+R, yR = real_flags(real)[FLAG_COLUMNS], real.label.values
 syn = pd.read_csv("data/listings.csv")
-S, yS = synth_flags(syn), syn.label.values
+S, yS = synth_flags(syn)[FLAG_COLUMNS], syn.label.values
 
 SIGN = np.array([-1 if c in PROTECTIVE else 1 for c in FLAG_COLUMNS])
 BOUNDS = [(None, 0) if c in PROTECTIVE else (0, None) for c in FLAG_COLUMNS] + [(None, None)]

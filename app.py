@@ -99,14 +99,16 @@ elif clicked:
     stops = hard_stops(flags)
 
     level = "High" if score >= 0.7 else "Medium" if score >= threshold else "Low"
+    shown = max(score, 0.90) if stops else score
     if stops:
-        level = "High"  # hard-stop rule overrides the model
+        level = "High"
 
-    msg = f"### {level} risk - model score {score:.0%}"
+    msg = f"### {level} risk - {'90%+' if stops and score < 0.90 else f'{shown:.0%}'}"
     {"High": st.error, "Medium": st.warning, "Low": st.success}[level](msg)
-    st.progress(score)
+    st.progress(shown)
     if stops:
-        st.caption("Set to High by a hard-stop rule: " + "; ".join(stops))
+        st.caption("Raised to High by a hard-stop rule: " + "; ".join(stops)
+                   + f". (Model score on its own: {score:.0%}.)")
 
     st.subheader("Red flags found")
     if found:

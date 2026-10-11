@@ -1,5 +1,9 @@
 """
-step2_train_model.py - Layer 2: train the scam decision model (v2.4).
+step2_train_model.py - Layer 2: train the scam decision model (v2.5).
+
+v2.5: same training data and constraints as v2.4, but each red flag's weight starts
+from an expert evidence tier and training adjusts it (see hybrid_model.py,
+features.TIERS, TIER_SOURCES.md). Adds the very_cheap flag (under 50% of face value).
 
 v2.4 (after the independent held-out test exposed overfitting):
   * The model now uses the red-flag / good-sign features only (no individual words).
@@ -27,7 +31,7 @@ from sklearn.model_selection import train_test_split
 
 from channels import channel_info
 from features import ALL_DESCRIPTIONS, FLAG_COLUMNS, HARD_STOPS, all_flags
-from hybrid_model import REAL_WEIGHT, HybridModel
+from hybrid_model import REAL_WEIGHT, build_v25
 
 THRESHOLD = 0.4  # confirmed by grouped cross-validation (0.3 / 0.4 / 0.5 / 0.6 compared)
 
@@ -78,7 +82,7 @@ print(f"Training data: {len(R)} real-world rows (weight x{REAL_WEIGHT}) + {len(S
 
 # ---------------------------------------------------------------- synthetic test split (continuity)
 S_tr, S_te, y_tr, y_te = train_test_split(S, yS, test_size=0.25, stratify=yS, random_state=42)
-check = HybridModel().fit(pd.concat([S_tr, R], ignore_index=True), np.r_[y_tr, yR],
+check = build_v25().fit(pd.concat([S_tr, R], ignore_index=True), np.r_[y_tr, yR],
                           np.r_[np.ones(len(S_tr)), np.full(len(R), REAL_WEIGHT)])
 pred = ((check.predict_proba(S_te)[:, 1] >= THRESHOLD) | (S_te[list(HARD_STOPS)].max(axis=1).values == 1)).astype(int)
 print(f"Synthetic test split: recall {recall_score(y_te, pred):.0%}, precision {precision_score(y_te, pred):.0%}")
@@ -87,11 +91,11 @@ print("Real-world performance: see `python select_hybrid.py` (grouped cross-vali
 Path("outputs").mkdir(exist_ok=True)
 disp = ConfusionMatrixDisplay.from_predictions(y_te, pred, display_labels=["Genuine", "Scam"],
                                                cmap="Blues", colorbar=False)
-disp.ax_.set_title("Synthetic test split (v2.4)")
+disp.ax_.set_title("Synthetic test split (v2.5)")
 plt.tight_layout(); plt.savefig("outputs/confusion_matrix.png", dpi=200); plt.close()
 
 # ---------------------------------------------------------------- final model on everything
-model = HybridModel().fit(pd.concat([S, R], ignore_index=True), np.r_[yS, yR],
+model = build_v25().fit(pd.concat([S, R], ignore_index=True), np.r_[yS, yR],
                           np.r_[np.ones(len(S)), np.full(len(R), REAL_WEIGHT)])
 
 w = model.weights()
@@ -107,5 +111,5 @@ print("Top signals:", ", ".join(w.head(10).index))
 print("Good signs:", ", ".join(w[w < 0].index) or "none")
 
 Path("model").mkdir(exist_ok=True)
-joblib.dump({"model": model, "threshold": THRESHOLD, "version": "2.4"}, "model/scam_model.joblib")
+joblib.dump({"model": model, "threshold": THRESHOLD, "version": "2.5"}, "model/scam_model.joblib")
 print("Saved model/scam_model.joblib and charts in outputs/")

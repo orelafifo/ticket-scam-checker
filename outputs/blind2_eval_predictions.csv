@@ -1,4 +1,4 @@
-id,label,source_type,source,platform,text,Rules only (v2.4),Text model only,Hybrid (our checker),hybrid_score,flags_fired
+id,label,source_type,source,platform,text,Rules only (v2.3),Text model only,Hybrid (our checker),hybrid_score,flags_fired
 B01,1,reconstructed,BforeAI 2025,A website I don't recognise,getworldcup2026tickets.com - FIFA World Cup 2026 tickets. Buy Tickets,1,1,1,0.99,"unknown_website, vague_listing, no_seat_details"
 B02,0,real_genuine,eFestivals forum 2025,Gumtree or other classified ads,One EOTR 2025 adult weekend ticket available - face value. Can go through official channels / whatever is preferred. Twickets aren't taking them yet. Face value of £270 + fees.,0,0,0,0.18,"social_or_messaging, no_seat_details"
 B03,1,reconstructed,ITV News Granada 2024,Instagram,"[Instagram DM from a hacked nurse's account, also posted to old Facebook groups she had joined] Selling Oasis tickets at £150 each - can do 4 for £600.",1,1,1,0.79,"social_or_messaging, sudden_seller, no_seat_details"

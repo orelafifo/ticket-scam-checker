@@ -9,8 +9,8 @@ existed, and v2.4 was frozen (PREREGISTRATION_v24.md) before it was collected.
 Produces two tables with the same four approaches as the first real-world test:
   Table A - v2.2: rules (rules_v22_frozen.py), text model and hybrid trained on the
             v2.2 synthetic data (data/listings_v22.csv, reproduced exactly)
-  Table B - v2.4: current rules (features.py), text model on current synthetic data,
-            hybrid = the saved v2.4 model
+  Table B - v2.4: v2.4 rules (features.py, without the v2.5 very_cheap flag), text model
+            on current synthetic data, hybrid = v2.4 rebuilt exactly (hybrid_model.build_v24)
   AI only (Gemini) is identical in both tables (Gemini doesn't change between
   versions). It runs only if GEMINI_API_KEY is in .env; answers are saved in
   outputs/llm_cache_blind2_test_set.json (shared with evaluate_real.py).
@@ -89,8 +89,9 @@ def real_X(df, rules):
     return pd.concat([df[["text"]], pd.DataFrame(rows)], axis=1)
 
 
-def rules_only(X, rules):
-    meaningful = [c for c in rules.FLAG_COLUMNS if c not in WEAK and c not in rules.PROTECTIVE]
+def rules_only(X, rules, columns=None):
+    columns = columns or rules.FLAG_COLUMNS
+    meaningful = [c for c in columns if c not in WEAK and c not in rules.PROTECTIVE]
     return ((X[list(rules.HARD_STOPS)].max(axis=1) == 1) | (X[meaningful].sum(axis=1) >= 2)).astype(int).values
 
 
@@ -114,7 +115,16 @@ def hybrid_v22(X):
 
 
 def hybrid_v24(X):
-    model = joblib.load("model/scam_model.joblib")["model"]
+    """Rebuilds the v2.4 model exactly (33 flags, plain L2, 120 real rows x50 + synthetic),
+    so this comparison still works after the app moves on to v2.5."""
+    from hybrid_model import REAL_WEIGHT, build_v24
+    syn = pd.read_csv("data/listings.csv")
+    S = synth_X(syn, v24_rules)
+    real = pd.concat([pd.read_csv("data/real_test_set.csv"), pd.read_csv("data/heldout_test_set.csv")],
+                     ignore_index=True)
+    R = real_X(real, v24_rules)
+    model = build_v24().fit(pd.concat([S, R], ignore_index=True), np.r_[syn.label.values, real.label.values],
+                            np.r_[np.ones(len(S)), np.full(len(R), REAL_WEIGHT)])
     hard = (X[list(v24_rules.HARD_STOPS)].max(axis=1) == 1).values
     return ((model.predict_proba(X)[:, 1] >= THRESHOLD) | hard).astype(int)
 
@@ -191,7 +201,7 @@ tables = {
     "v2.2": {"Rules only": rules_only(X22, v22_rules),
              "Text model only": text_only("data/listings_v22.csv", test.text),
              "Hybrid v2.2": hybrid_v22(X22)},
-    "v2.4": {"Rules only": rules_only(X24, v24_rules),
+    "v2.4": {"Rules only": rules_only(X24, v24_rules, v24_rules.V24_FLAG_COLUMNS),
              "Text model only": text_only("data/listings.csv", test.text),
              "Hybrid v2.4": hybrid_v24(X24)},
 }

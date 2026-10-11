@@ -34,7 +34,8 @@ from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import Pipeline
 
 from channels import channel_info
-from features import FLAG_COLUMNS, HARD_STOPS, PROTECTIVE, all_flags
+from features import HARD_STOPS, PROTECTIVE, all_flags
+from features import V24_FLAG_COLUMNS as FLAG_COLUMNS   # the v2.4 evidence uses the 33 v2.4 features
 
 WEAK = {"no_seat_details", "high_demand"}
 MEANINGFUL = [c for c in FLAG_COLUMNS if c not in WEAK and c not in PROTECTIVE]
@@ -74,10 +75,10 @@ dev = pd.read_csv("data/real_test_set.csv")
 ho = pd.read_csv("data/heldout_test_set.csv")
 real = pd.concat([dev, ho], ignore_index=True)
 real["group"] = real["source"].fillna("constructed").where(real.label == 1, real["id"])  # genuine rows: own group
-R = real_flags(real)
+R = real_flags(real)[FLAG_COLUMNS]
 yR = real.label.values
 syn = pd.read_csv("data/listings.csv")
-S = synth_flags(syn)
+S = synth_flags(syn)[FLAG_COLUMNS]
 yS = syn.label.values
 
 
