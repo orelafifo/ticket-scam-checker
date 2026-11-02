@@ -101,9 +101,10 @@ model = build_v25().fit(pd.concat([S, R], ignore_index=True), np.r_[yS, yR],
 w = model.weights()
 w = w[w != 0]
 top = w.head(15)[::-1]
-plt.figure(figsize=(8, 6))
-plt.barh([ALL_DESCRIPTIONS[k][:55] for k in top.index], top.values, color="#2a78d6")
-plt.title("What the model learned: weight of each red flag", loc="left")
+import textwrap
+plt.figure(figsize=(10, 7))
+plt.barh([textwrap.fill(ALL_DESCRIPTIONS[k], 45) for k in top.index], top.values, color="#2a78d6")
+plt.title("Top 15 red flags by weight (v2.5)", loc="left")
 plt.xlabel("Weight (higher = raises the risk more)")
 plt.gca().spines[["top", "right"]].set_visible(False)
 plt.tight_layout(); plt.savefig("outputs/top_features.png", dpi=200); plt.close()
