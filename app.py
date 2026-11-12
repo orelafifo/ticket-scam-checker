@@ -1,5 +1,5 @@
 """
-app.py - the Ticket Scam Checker app (v2.6). Run with:   streamlit run app.py
+app.py - the Ticket Scam Checker app (v2.7). Run with:   streamlit run app.py
 
 v2.6: short form (paste the listing, where you found it, how you met the seller); everything
 else is optional. The event details are read from the listing by AI (spaCy), soft red flags
@@ -31,12 +31,12 @@ from redact import redact
 
 st.set_page_config(page_title="Ticket Scam Checker", page_icon="🎟️", layout="centered")
 if not os.path.exists("model/scam_model.joblib"):  # first run online: train the model
-    subprocess.run([sys.executable, "step2_train_model.py"], check=True)
+    subprocess.run([sys.executable, "step2_train_v27.py"], check=True)
 bundle = load_bundle()
 
 st.title("🎟️ Ticket Scam Checker")
-st.caption("Paste a resale listing before you pay. Prototype (v2.6) – trained on 120 real published scam "
-           "cases plus synthetic examples. A warning tool, not a guarantee: always pay with buyer protection.")
+st.caption("Paste a resale listing before you pay. Prototype (v2.7) for UK live music – trained on 291 real "
+           "examples plus synthetic ones. A warning tool, not a guarantee: always pay with buyer protection.")
 
 # ---------------- The 3 main questions ----------------
 text = st.text_area("1. Paste the listing or the seller's messages", height=140,

@@ -1,5 +1,5 @@
 """
-checker.py - v2.6: one function that runs the whole check, so the app, the tests and the
+checker.py - v2.6/v2.7: one function that runs the whole check, so the app, the tests and the
 command-line demo all use exactly the same logic.
 
 Order of steps
@@ -65,6 +65,10 @@ def check_listing(text, platform=None, link="", contact=None, price_status=None,
                       int(bool(has_seat_details)), int(bool(sudden_seller)), event, channel,
                       contact=contact, price_status=price_status)
     X = pd.DataFrame([flags])[FLAG_COLUMNS]
+    # v2.7: the MiniLM meaning score (only in v2.7 bundles; the frozen v2.6 bundle has none)
+    meaning = float(bundle["meaning"].score([text])[0]) if "meaning" in bundle else None
+    if meaning is not None:
+        X["meaning_score"] = meaning
     score = float(model.predict_proba(X)[0, 1])
     lo, hi = (float(v[0]) for v in bundle["ensemble"].interval(X)) if "ensemble" in bundle else (score, score)
 
@@ -85,7 +89,7 @@ def check_listing(text, platform=None, link="", contact=None, price_status=None,
     shown = max(score, 0.90) if stops else score
 
     ai = why_semantic(text)
-    return dict(score=score, shown=shown, range=(lo, hi), level=level, reason=reason, threshold=threshold,
+    return dict(score=score, shown=shown, meaning_score=meaning, range=(lo, hi), level=level, reason=reason, threshold=threshold,
                 flags=flags, red_flags=triggered(flags), good_signs=protections(flags), hard_stops=stops,
                 ai_evidence={ALL_DESCRIPTIONS[k]: v for k, v in ai.items()},
                 event=event, event_read=read, event_used=dict(artist=artist_used, venue=venue_used, date=date_used),
