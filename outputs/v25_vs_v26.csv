@@ -1,0 +1,4 @@
+,test_set,caught,false_alarms,recall,precision,F1,false_alarm_rate
+v2.5,blind4_test_set,9/20,0/20,0.45,1.0,0.6206896551724138,0.0
+v2.6 model,blind4_test_set,12/20,0/20,0.6,1.0,0.75,0.0
+v2.6 as shown in the app,blind4_test_set,15/20,5/20,0.75,0.75,0.75,0.25
