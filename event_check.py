@@ -17,9 +17,10 @@ Sources (keys go in a .env file, see .env.example):
   * NOT POSSIBLE: AXS, See Tickets, DICE, Eventim, Gigantic have no public API.
              For these the user picks the official seller, and "not found" is
              treated as "couldn't check" rather than a red flag.
-  * OFFLINE: data/events_demo.csv - a small DEMO catalogue so the app works on
-             camera without internet. It is made-up sample data, NOT real tour
-             dates. Say so in the video.
+  * TESTS ONLY: data/events_test_catalogue.csv - a small made-up catalogue used by the
+             unit tests to check the date/venue matching without internet. v2.6: the app
+             never uses it. With no key, no internet or no result, the app says
+             "Event not checked" (= couldn't check, never a red flag) instead of guessing.
 
 Values are True / False / None. None = "couldn't check", which never raises a
 red flag by itself (we don't punish a seller because our lookup failed).
@@ -37,7 +38,7 @@ from pathlib import Path
 
 import pandas as pd
 
-CATALOGUE = Path(__file__).parent / "data" / "events_demo.csv"
+CATALOGUE = Path(__file__).parent / "data" / "events_test_catalogue.csv"   # tests only
 TM_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
 SKIDDLE_URL = "https://www.skiddle.com/api/v1/events/search/"
 GENERIC_VENUE_WORDS = {"the", "arena", "stadium", "london", "manchester", "birmingham", "live", "hall"}
@@ -177,10 +178,10 @@ def _skiddle(artist: str, api_key: str, event_date: date | None) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Source 3: offline demo catalogue
+# Tests only: made-up catalogue (use_demo=True)
 # ---------------------------------------------------------------------------
 def _catalogue(artist: str) -> list[dict] | None:
-    """Returns None if the artist isn't in the demo catalogue at all
+    """Tests only. Returns None if the artist isn't in the test catalogue at all
     (a small demo list can't prove an event doesn't exist)."""
     if not CATALOGUE.exists():
         return None
@@ -205,11 +206,12 @@ SELLER_OPTIONS = ["Ticketmaster", "AXS", "See Tickets", "DICE", "Skiddle",
 
 
 def check_event(artist: str, venue: str = "", event_date: date | None = None,
-                today: date | None = None, official_sellers=None) -> dict:
+                today: date | None = None, official_sellers=None, use_demo: bool = False) -> dict:
     """official_sellers = list of who sells the official tickets (from the artist's
     website); empty = don't know. Gigs are often split across several sellers.
     We only say 'event not found' when EVERY official seller is one we searched;
-    otherwise a missing result just means 'couldn't check' (no red flag)."""
+    otherwise a missing result just means 'couldn't check' (no red flag).
+    use_demo=True is for the unit tests only (made-up test catalogue)."""
     if isinstance(official_sellers, str):  # accept a single name too
         official_sellers = [official_sellers]
     sellers = [s for s in (official_sellers or []) if s != "Don't know"]
@@ -249,16 +251,20 @@ def check_event(artist: str, venue: str = "", event_date: date | None = None,
                             f"{', '.join(x for x in unsearched if x in SEARCHABLE_SELLERS)} couldn't be searched")
         else:
             who = ", ".join(unsearched) if unsearched else "the official seller"
-            # don't return yet: the demo catalogue below may still know the artist
+            # carry on to the "not checked" result below
             problems.append(f"Not found on {' or '.join(searched)}. Tickets may be sold by {who}, "
                             "which we can't search, so check the artist's official website")
 
-    # 2) Fall back to the offline demo catalogue
-    reason = "; ".join(problems) or "No API keys set, used demo catalogue"
+    reason = "; ".join(problems) or "No event data source available (add TICKETMASTER_API_KEY or SKIDDLE_API_KEY to .env)"
+    if not use_demo:
+        # v2.6: no made-up fallback in the app - say honestly that the event couldn't be checked
+        return _empty("none", reason + ". Event not checked.")
+
+    # 2) Tests only: the made-up test catalogue
     events = _catalogue(artist)
     if events is None:
-        return _empty("demo catalogue", reason + ". Event not checked.")
-    result = _judge(events, venue, event_date, today, "demo catalogue")
+        return _empty("test catalogue", reason + ". Event not checked.")
+    result = _judge(events, venue, event_date, today, "test catalogue")
     result["note"] = f"{result['note']} ({reason})"
     return result
 
@@ -269,4 +275,4 @@ if __name__ == "__main__":
                     ("Burna Boy", "O2 Arena", date(2027, 3, 20)),
                     ("Stray Kids", "Wembley", date(2027, 7, 3)),
                     ("Unknown Band", "", None)]:
-        print(a, v, d, "->", check_event(a, v, d))
+        print(a, v, d, "->", check_event(a, v, d, use_demo=True))

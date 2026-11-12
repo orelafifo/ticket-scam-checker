@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-from features import FLAG_COLUMNS, PROTECTIVE, V24_FLAG_COLUMNS
+from features import FLAG_COLUMNS, PROTECTIVE, V24_FLAG_COLUMNS, V25_FLAG_COLUMNS
 
 REAL_WEIGHT = 50     # chosen by grouped cross-validation in v2.4 (5 / 20 / 50 compared)
 V25_PRIOR_C = 0.3    # prior strength, chosen by grouped cross-validation (select_v25.py: best F1)
@@ -91,4 +91,25 @@ def build_v24():
 def build_v25():
     """The v2.5 design: 34 flags, L2 towards the expert tier weights."""
     from features import PRIOR_WEIGHTS
-    return HybridModel(C=V25_PRIOR_C, columns=FLAG_COLUMNS, prior=PRIOR_WEIGHTS)
+    return HybridModel(C=V25_PRIOR_C, columns=V25_FLAG_COLUMNS, prior=PRIOR_WEIGHTS)
+
+
+def build_v26(C: float = V25_PRIOR_C):
+    """The v2.6 design: same learning rule as v2.5 (L2 towards the expert tiers) on 37 flags.
+    The 3 new "how did you meet the seller" flags have no training examples yet, so their
+    weights stay at their expert tier until real data arrives (that is what the prior is for)."""
+    from features import PRIOR_WEIGHTS
+    return HybridModel(C=C, columns=FLAG_COLUMNS, prior=PRIOR_WEIGHTS)
+
+
+class Ensemble:
+    """v2.6 uncertainty: the same model trained N times on bootstrap resamples of the real
+    examples. If the N scores disagree about which side of the threshold a listing is on,
+    the model is unsure, and the app says "Borderline" instead of a confident Low."""
+
+    def __init__(self, models):
+        self.models = models
+
+    def interval(self, X, lo=10, hi=90):
+        s = np.array([m.predict_proba(X)[:, 1] for m in self.models])
+        return np.percentile(s, lo, axis=0), np.percentile(s, hi, axis=0)

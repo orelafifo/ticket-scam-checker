@@ -15,6 +15,9 @@ from __future__ import annotations
 
 import re
 
+from normalise import normalise
+from semantic_flags import semantic_flags
+
 # ---------------------------------------------------------------------------
 # Text rules: (flag name, regex pattern, plain-English description)
 # ---------------------------------------------------------------------------
@@ -22,7 +25,10 @@ TEXT_RULES = [
     # --- A. Payment ---
     ("unsafe_payment",
      r"bank transfer|friends (and|&) family|\bf&f\b|\bff\b|gift ?card|crypto|bitcoin|\busdt\b|"
-     r"revolut me|monzo me|paypal family|(amazon|itunes|apple|steam|google play) (gift )?card",
+     r"revolut me|monzo me|paypal family|(amazon|itunes|apple|steam|google play) (gift )?card|"
+     # v2.6: payment apps with no buyer protection for this kind of sale (gaps found in blind test #3)
+     r"\brevolut\b|\bmonzo\b|\btwint\b|cash app|\bvenmo\b|\bzelle\b|\bwise\b|"
+     r"sort code|account number|bank details|paypal (friends|f&f|personal)",
      "Asks for a payment method with no buyer protection"),
     ("payment_switch",
      r"paypal (is |isn'?t |is not |not )?(working|down|blocked|restricted|limited)|"
@@ -48,7 +54,10 @@ TEXT_RULES = [
      "Uses pressure or urgency language"),
     ("off_platform",
      r"whatsapp|telegram|\b(dm|pm|inbox) me\b|message me on|text me on|move to|"
-     r"private message|message (me|you) privately",
+     r"private message|message (me|you) privately|"
+     # v2.6: wording found in real posts ("Kindly DM if interested", "hmu"); text is normalised first
+     r"\b(dm|pm)\b|\binbox\b|hit me up|\bmessage me\b|text me|snapchat|add me on|"
+     r"(price|details|info) (in|on|via) (dm|pm|private|message)",
      "Tries to move the conversation off the platform"),
     ("send_after_payment",
      r"after (payment|paying|you('ve)? pa(y|id)|u pay)|once paid|once (the )?payment|"
@@ -95,9 +104,15 @@ TEXT_RULES = [
 ]
 
 
-def text_flags(text: str) -> dict:
-    t = text.lower()
+def text_flags(text: str, semantic: bool = True) -> dict:
+    """v2.6: the text is normalised first (normalise.py: "hmu" -> "hit me up", "plz" -> "please",
+    typos in key words fixed). Then each flag fires if its rule matches OR, for the soft flags,
+    the AI meaning-matcher finds a sentence that means the same (semantic_flags.py)."""
+    t = normalise(text)
     flags = {name: int(bool(re.search(pattern, t))) for name, pattern, _ in TEXT_RULES}
+    if semantic:
+        for name in semantic_flags(t):
+            flags[name] = 1
     # Real scam posts are often tiny and vague: no price, no details, just "PM me".
     flags["vague_listing"] = int(len(t.split()) < 15 and not re.search(r"[£$€]\s?\d|\d+\s?(each|quid)", t))
     return flags
@@ -156,6 +171,27 @@ def channel_flags(channel: dict | None) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# v2.6: F. How the buyer came across the seller (new question in the app)
+# ---------------------------------------------------------------------------
+CONTACT_CHOICES = {
+    "Don't know / prefer not to say": None,
+    "A public post or listing (e.g. Instagram, X, Facebook, Gumtree)": "public_post",
+    "A group chat with people I don't know (e.g. joined by an invite link)": "group_chat",
+    "They messaged me first": "messaged_first",
+    "A friend's account": "friend_account",
+    "An official ticket or resale site": "official_site",
+}
+
+
+def contact_flags(contact: str | None) -> dict:
+    return {
+        "stranger_group_chat": int(contact == "group_chat"),
+        "seller_messaged_first": int(contact == "messaged_first"),
+        "friend_account": int(contact == "friend_account"),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Descriptions, column order, helpers
 # ---------------------------------------------------------------------------
 TEXT_DESCRIPTIONS = {name: desc for name, _, desc in TEXT_RULES if desc}
@@ -185,11 +221,19 @@ CHANNEL_DESCRIPTIONS = {
     "insecure_or_short_link": "Link isn't secure (http) or hides its destination (link shortener)",
     "official_platform": "Official seller or face-value resale platform with buyer protection",
 }
-ALL_DESCRIPTIONS = {**CHANNEL_DESCRIPTIONS, **TEXT_DESCRIPTIONS, **SELLER_DESCRIPTIONS, **EVENT_DESCRIPTIONS}
+CONTACT_DESCRIPTIONS = {
+    "stranger_group_chat": "Seller is a stranger in a group chat (e.g. joined through an open invite link)",
+    "seller_messaged_first": "The seller contacted you first (cold approach)",
+    "friend_account": "Sold from a friend's account - check with your friend another way, "
+                      "accounts are often hacked to sell fake tickets",
+}
+ALL_DESCRIPTIONS = {**CHANNEL_DESCRIPTIONS, **TEXT_DESCRIPTIONS, **SELLER_DESCRIPTIONS, **EVENT_DESCRIPTIONS,
+                    **CONTACT_DESCRIPTIONS}
 FLAG_COLUMNS = (list(CHANNEL_DESCRIPTIONS) + list(TEXT_DESCRIPTIONS) +
-                list(SELLER_DESCRIPTIONS) + list(EVENT_DESCRIPTIONS))
+                list(SELLER_DESCRIPTIONS) + list(EVENT_DESCRIPTIONS) + list(CONTACT_DESCRIPTIONS))
 PROTECTIVE = {"official_platform"}  # good signs: shown with a tick, not a red flag
-V24_FLAG_COLUMNS = [c for c in FLAG_COLUMNS if c != "very_cheap"]   # v2.4 used these 33
+V25_FLAG_COLUMNS = [c for c in FLAG_COLUMNS if c not in CONTACT_DESCRIPTIONS]   # v2.5 used these 34
+V24_FLAG_COLUMNS = [c for c in V25_FLAG_COLUMNS if c != "very_cheap"]           # v2.4 used these 33
 
 # ---------------------------------------------------------------------------
 # v2.5: expert evidence tiers (agreed with Orela, 9 Oct 2026). Each red flag starts
@@ -204,9 +248,11 @@ TIERS = {
                "event_not_found", "before_on_sale"],
     "moderate": ["off_platform", "send_after_payment", "screenshot_proof", "vague_listing",
                  "cheap_wording", "engagement_bait", "social_or_messaging", "sob_story",
-                 "insecure_or_short_link"],
+                 "insecure_or_short_link",
+                 "stranger_group_chat", "seller_messaged_first"],          # v2.6 (Claude placed - confirm)
     "weak": ["new_account", "few_followers", "no_seat_details", "urgency", "trust_claims",
-             "too_cheap", "high_demand", "secondary_market"],
+             "too_cheap", "high_demand", "secondary_market",
+             "friend_account"],                                            # v2.6 (Claude placed - confirm)
     "good_sign": ["official_platform"],
 }
 TIER_PRIOR = {"hard_stop": 3.0, "strong": 2.5, "moderate": 1.5, "weak": 0.5, "good_sign": -2.0}
@@ -221,13 +267,38 @@ HARD_STOPS = {"asks_for_codes", "hide_reference", "event_mismatch", "format_mism
 
 
 def all_flags(text, account_age_days, followers, price_ratio, has_seat_details,
-              sudden_seller=0, event=None, channel=None) -> dict:
-    tf = text_flags(text)
+              sudden_seller=0, event=None, channel=None, contact=None, price_status=None,
+              semantic=True, columns=None) -> dict:
+    """v2.6 extra inputs:
+      contact      - how the buyer came across the seller (CONTACT_CHOICES values; None = unknown)
+      price_status - "stated" / "not_stated" / "dm_only" (None = unknown). "Only in DMs" means the
+                     seller is moving you off the platform, so it turns on off_platform.
+      semantic     - False = rules only (used to rebuild v2.5-style results for comparison)"""
+    tf = text_flags(text, semantic=semantic)
     mentions_file = tf.pop("mentions_file_ticket")
+    if price_status == "dm_only":
+        tf["off_platform"] = 1
     flags = {**channel_flags(channel), **tf,
              **seller_flags(account_age_days, followers, price_ratio, has_seat_details, sudden_seller),
-             **event_flags(event, mentions_file)}
-    return {k: flags[k] for k in FLAG_COLUMNS}
+             **event_flags(event, mentions_file), **contact_flags(contact)}
+    return {k: flags[k] for k in (columns or FLAG_COLUMNS)}
+
+
+def why_semantic(text: str) -> dict:
+    """{flag: (sentence, example it matched, similarity)} - shown in the app so the AI part is explainable."""
+    return semantic_flags(normalise(text))
+
+
+# ---------------------------------------------------------------------------
+# v2.6: safety net - "not enough information" instead of a reassuring Low
+# ---------------------------------------------------------------------------
+def not_enough_info(flags: dict, price_status: str | None, seller_known: bool, contact: str | None) -> bool:
+    """A listing from social media / a group chat / a cold message, with no price AND no seller
+    details, is never rated Low: there is simply too little to judge (the WhatsApp case,
+    Nov 2026, scored 16% Low). The app shows Medium - not enough information."""
+    risky_channel = bool(flags.get("social_or_messaging")) or contact in ("group_chat", "messaged_first")
+    no_price = price_status in (None, "not_stated", "dm_only")
+    return risky_channel and no_price and not seller_known
 
 
 def triggered(flags: dict) -> list:

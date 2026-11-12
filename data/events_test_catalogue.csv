@@ -1,0 +1,11 @@
+artist,venue,date,on_sale_date,status,high_demand,app_only,face_min,face_max
+Burna Boy,The O2,2027-03-14,2026-09-05,offsale,1,1,65,150
+Burna Boy,Co-op Live,2027-03-18,2026-09-05,onsale,0,1,60,140
+Tems,The O2,2027-02-06,2026-08-22,onsale,0,1,55,95
+Stray Kids,Wembley Stadium,2027-07-03,2026-11-20,onsale,1,1,85,180
+SEVENTEEN,OVO Arena Wembley,2027-01-23,2026-07-10,offsale,1,1,80,160
+SZA,Tottenham Hotspur Stadium,2027-06-12,2026-10-02,onsale,1,1,70,175
+Central Cee,AO Arena,2026-12-11,2026-06-27,onsale,0,1,45,85
+Rema,Utilita Arena,2027-04-09,2026-09-12,onsale,0,0,40,70
+Olivia Rodrigo,The O2,2027-05-21,2026-09-19,offsale,1,1,70,155
+Coldplay,Wembley Stadium,2027-08-20,2026-10-30,onsale,1,1,85,200

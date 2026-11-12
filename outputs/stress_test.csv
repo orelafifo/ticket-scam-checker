@@ -1,0 +1,72 @@
+flag,should_fire,text,v2.5 rules,v2.6 rules,v2.6 + MiniLM,evidence
+off_platform,1,Kindly DM if interested,0,1,1,"('kindly dm if interested', 'dm if interested', 0.74)"
+off_platform,1,HMU if you want them,0,1,1,"('hit me up if you want them', 'hit me up', 0.71)"
+off_platform,1,plsease dm,0,1,1,"('please dm', 'dm me', 0.79)"
+off_platform,1,slide into my DMs for details,0,1,1,"('dm me for details', 'dm me', 0.74)"
+off_platform,1,Shoot me a message and we'll sort it,0,1,1,
+off_platform,1,Ping me privately for more info,0,0,0,
+off_platform,1,Reach out to me directly on my number,0,0,1,"('reach out to me directly on my number', 'text me on my number', 0.73)"
+off_platform,1,Get in touch via my Insta and we can chat there,0,0,0,
+off_platform,1,Let's continue this conversation over text,0,0,0,
+off_platform,1,Contact me outside this group,0,0,0,
+off_platform,1,DM for price,0,1,1,"('dm for price', 'price in dm', 0.91)"
+off_platform,1,Inbox me x,1,1,1,"('inbox me x', 'inbox me for details', 0.8)"
+off_platform,1,Drop me a line if keen,0,0,0,
+off_platform,1,Add me on snap,0,1,1,"('add me on snap', 'add me on snapchat', 0.91)"
+off_platform,1,Send me a private msg babe,0,1,1,"('send me a private message babe', 'send me a private message', 0.81)"
+unsafe_payment,1,Payment by TWINT only,0,1,1,"('payment by twint only', 'payment via twint', 0.96)"
+unsafe_payment,1,Revolut or Monzo accepted,0,1,1,
+unsafe_payment,1,You can just send it straight to my account,0,0,0,
+unsafe_payment,1,I'll need the money sent directly to my bank,0,0,1,"(""i'll need the money sent directly to my bank"", 'send the money to my bank account', 0.8)"
+unsafe_payment,1,Paypal but only the friends option,0,0,1,"('paypal but only the friends option', 'pay with paypal friends and family', 0.71)"
+unsafe_payment,1,Send the cash via Wise,0,1,1,
+unsafe_payment,1,I take Apple gift cards,1,1,1,
+unsafe_payment,1,Happy to take USDT or BTC,1,1,1,
+unsafe_payment,1,Cash App me the money,0,1,1,"('cash app me the money', 'send it on cash app', 0.7)"
+unsafe_payment,1,Transfer to my mum's account is fine,0,0,0,
+send_after_payment,1,Once the money lands I'll ping the tickets over,0,0,0,
+send_after_payment,1,Pay first then you'll receive them,0,0,0,
+send_after_payment,1,Tickets go out to you when I see the transfer,0,0,0,
+send_after_payment,1,As soon as you've paid I'll email them,0,0,0,
+send_after_payment,1,You'll get them the moment payment clears,0,0,0,
+deposit_or_hold,1,Send £20 to reserve them for you,1,1,1,
+deposit_or_hold,1,Put down a small amount now and the rest on the day,0,0,0,
+deposit_or_hold,1,I can hold them if you pay something upfront,1,1,1,
+deposit_or_hold,1,Half now half later,1,1,1,
+urgency,1,Loads of people asking so act fast,1,1,1,
+urgency,1,Whoever pays first gets them,0,0,1,"('whoever pays first gets them', 'first to pay gets them', 0.84)"
+urgency,1,Need this sorted by tonight,0,0,0,
+urgency,1,These won't be around for long,0,0,0,
+urgency,1,Going to the first person who sends money,0,0,0,
+sob_story,1,Something came up at work so I can't make it,0,0,1,"(""something came up at work so i can't make it"", ""work came up so i can't make it"", 0.86)"
+sob_story,1,My grandma passed away so I won't be going,0,0,0,
+sob_story,1,Had to move abroad unexpectedly,0,0,0,
+sob_story,1,Broke my leg so can't attend anymore,0,0,0,
+sob_story,1,My girlfriend dumped me so I have a spare,0,0,0,
+trust_claims,1,I'm a trustworthy seller I promise,0,0,1,"(""i'm a trustworthy seller i promise"", 'i am a legit seller', 0.75)"
+trust_claims,1,Check my profile I've sold loads no issues,0,0,0,
+trust_claims,1,Totally genuine not a scammer,1,1,1,
+trust_claims,1,You can trust me babe,0,0,0,
+payment_switch,1,My PayPal is having problems so bank transfer only today,0,0,1,"('my paypal is having problems so bank transfer only today', ""my paypal isn't working so can you pay by bank"", 0.72)"
+payment_switch,1,Card payments keep failing so can we do it another way,0,0,0,
+payment_switch,1,PayPal froze my account so need another method,0,0,1,"('paypal froze my account so need another method', 'paypal has blocked my account so please send it another way', 0.73)"
+none,0,Tickets will be transferred through the Ticketmaster app,0,0,0,
+none,0,Pay through PayPal Goods and Services please,0,0,0,
+none,0,Block 112 row F seats 14 and 15,0,0,0,
+none,0,Listed on Twickets at face value,0,0,0,
+none,0,Happy to meet at the venue and transfer in person,0,0,0,
+none,0,Standing tickets for the Friday night,0,0,0,
+none,0,Paid £85 each and selling for the same,0,0,0,
+none,0,Transfer via the official resale site only,0,0,0,
+none,0,Can't wait for the show it's going to be amazing,0,0,0,
+none,0,Two tickets available for the Manchester date,0,0,0,
+none,0,I'll transfer on the app in front of you before you pay,0,0,0,
+none,0,Bought from Ticketmaster in the presale,0,0,0,
+none,0,Doors open at 6pm,0,0,0,
+none,0,Selling at what I paid no profit,0,0,0,
+none,0,The tickets are e-tickets in the AXS app,0,0,0,
+none,0,Seats are next to each other in the lower tier,0,0,0,
+none,0,Buy through the official fan-to-fan exchange,0,0,0,
+none,0,Price is £60 each including fees,0,0,0,
+none,0,Can show my order confirmation email from Ticketmaster,0,0,0,
+none,0,Looking for 2 tickets for Saturday,0,0,0,

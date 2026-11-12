@@ -7,3 +7,8 @@ requests          # Ticketmaster event lookup
 google-genai      # Gemini explainer (free tier)
 anthropic         # optional alternative explainer
 python-dotenv     # loads API keys from .env
+# v2.6 - local AI models (run on this computer, nothing sent to an outside service)
+sentence-transformers   # MiniLM meaning-matcher (downloads ~90 MB from huggingface.co on first run)
+spacy                   # event details from the listing; then run: python -m spacy download en_core_web_sm
+python-dateutil
+pytest                  # unit tests: python -m pytest -q

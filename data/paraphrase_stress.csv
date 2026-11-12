@@ -1,0 +1,72 @@
+flag,should_fire,text
+off_platform,1,Kindly DM if interested
+off_platform,1,HMU if you want them
+off_platform,1,plsease dm
+off_platform,1,slide into my DMs for details
+off_platform,1,Shoot me a message and we'll sort it
+off_platform,1,Ping me privately for more info
+off_platform,1,Reach out to me directly on my number
+off_platform,1,Get in touch via my Insta and we can chat there
+off_platform,1,Let's continue this conversation over text
+off_platform,1,Contact me outside this group
+off_platform,1,DM for price
+off_platform,1,Inbox me x
+off_platform,1,Drop me a line if keen
+off_platform,1,Add me on snap
+off_platform,1,Send me a private msg babe
+unsafe_payment,1,Payment by TWINT only
+unsafe_payment,1,Revolut or Monzo accepted
+unsafe_payment,1,You can just send it straight to my account
+unsafe_payment,1,I'll need the money sent directly to my bank
+unsafe_payment,1,Paypal but only the friends option
+unsafe_payment,1,Send the cash via Wise
+unsafe_payment,1,I take Apple gift cards
+unsafe_payment,1,Happy to take USDT or BTC
+unsafe_payment,1,Cash App me the money
+unsafe_payment,1,Transfer to my mum's account is fine
+send_after_payment,1,Once the money lands I'll ping the tickets over
+send_after_payment,1,Pay first then you'll receive them
+send_after_payment,1,Tickets go out to you when I see the transfer
+send_after_payment,1,As soon as you've paid I'll email them
+send_after_payment,1,You'll get them the moment payment clears
+deposit_or_hold,1,Send £20 to reserve them for you
+deposit_or_hold,1,Put down a small amount now and the rest on the day
+deposit_or_hold,1,I can hold them if you pay something upfront
+deposit_or_hold,1,Half now half later
+urgency,1,Loads of people asking so act fast
+urgency,1,Whoever pays first gets them
+urgency,1,Need this sorted by tonight
+urgency,1,These won't be around for long
+urgency,1,Going to the first person who sends money
+sob_story,1,Something came up at work so I can't make it
+sob_story,1,My grandma passed away so I won't be going
+sob_story,1,Had to move abroad unexpectedly
+sob_story,1,Broke my leg so can't attend anymore
+sob_story,1,My girlfriend dumped me so I have a spare
+trust_claims,1,I'm a trustworthy seller I promise
+trust_claims,1,Check my profile I've sold loads no issues
+trust_claims,1,Totally genuine not a scammer
+trust_claims,1,You can trust me babe
+payment_switch,1,My PayPal is having problems so bank transfer only today
+payment_switch,1,Card payments keep failing so can we do it another way
+payment_switch,1,PayPal froze my account so need another method
+none,0,Tickets will be transferred through the Ticketmaster app
+none,0,Pay through PayPal Goods and Services please
+none,0,Block 112 row F seats 14 and 15
+none,0,Listed on Twickets at face value
+none,0,Happy to meet at the venue and transfer in person
+none,0,Standing tickets for the Friday night
+none,0,Paid £85 each and selling for the same
+none,0,Transfer via the official resale site only
+none,0,Can't wait for the show it's going to be amazing
+none,0,Two tickets available for the Manchester date
+none,0,I'll transfer on the app in front of you before you pay
+none,0,Bought from Ticketmaster in the presale
+none,0,Doors open at 6pm
+none,0,Selling at what I paid no profit
+none,0,The tickets are e-tickets in the AXS app
+none,0,Seats are next to each other in the lower tier
+none,0,Buy through the official fan-to-fan exchange
+none,0,Price is £60 each including fees
+none,0,Can show my order confirmation email from Ticketmaster
+none,0,Looking for 2 tickets for Saturday

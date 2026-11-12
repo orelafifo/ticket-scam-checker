@@ -90,3 +90,14 @@ Genuine fans often sell a little below face value, for example at 80–95% to ge
 - CBS 2023: https://www.cbsnews.com/boston/news/scammers-hack-facebook-accounts-fake-taylor-swift-tickets
 
 **Honest limit for the report:** the tiers are a judgement made from these sources. They are not measured statistics. The training data then checks and adjusts them, and blind test #3 checks the result.
+
+## v2.6 additions (12 Nov 2026) - Claude placed these tiers; Orela to confirm or change
+| Flag | Plain English | Tier | Suggested sources (verify before citing) |
+|---|---|---|---|
+| stranger_group_chat | Seller is a stranger in a group chat (e.g. joined through an open invite link) | moderate | Real suspected case, uni WhatsApp group (Nov 2026, pseudonymised); Which? 2025 and WCPO 2024 above describe scams spreading through social/group contacts. A UK source naming group-chat ticket scams still needs to be found. |
+| seller_messaged_first | The seller contacted you first (cold approach) | moderate | Action Fraud general advice on unsolicited contact; blind test #3 C-rows with sellers replying to comments (e.g. "Saw your comment...", S21). Find a specific source. |
+| friend_account | Sold from a friend's account | weak | Which? 2025 and WCPO 2024 / CBS 2023 above (hacked friends' accounts selling fake tickets). Weak because most friends are genuine; the app also tells the user to check with the friend another way. |
+
+These three flags have **no training examples yet** (no published case records how the buyer met the seller), so their weights stay at the tier value. The tier choice therefore matters more here than for older flags - another reason they need confirming and testing in blind test #4.
+
+New wordings for existing flags (DM / inbox / hmu / "price in DMs" -> off_platform; Revolut / Monzo / TWINT / Cash App / Wise / PayPal F&F -> unsafe_payment) keep the existing flags' tiers. Sources: blind test #3 misses (Revolut, TWINT) and the WhatsApp case.
