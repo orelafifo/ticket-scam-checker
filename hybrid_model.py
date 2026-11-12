@@ -102,6 +102,18 @@ def build_v26(C: float = V25_PRIOR_C):
     return HybridModel(C=C, columns=FLAG_COLUMNS, prior=PRIOR_WEIGHTS)
 
 
+MEANING_PRIOR = 1.5   # v2.7: meaning_score starts at the moderate tier
+
+
+def build_v27(C: float = V25_PRIOR_C, with_meaning: bool = True):
+    """The v2.7 design: the v2.6 design + (optionally) ONE extra feature, meaning_score
+    (meaning_model.py). Sign >= 0 because it is not in PROTECTIVE."""
+    from features import PRIOR_WEIGHTS
+    cols = list(FLAG_COLUMNS) + (["meaning_score"] if with_meaning else [])
+    prior = dict(PRIOR_WEIGHTS, meaning_score=MEANING_PRIOR)
+    return HybridModel(C=C, columns=cols, prior=prior)
+
+
 class Ensemble:
     """v2.6 uncertainty: the same model trained N times on bootstrap resamples of the real
     examples. If the N scores disagree about which side of the threshold a listing is on,
