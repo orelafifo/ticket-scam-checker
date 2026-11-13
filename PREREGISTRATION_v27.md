@@ -96,3 +96,15 @@ Decided by Orela: run blind test #5 now, with v2.7 = Upgrade 1 only.
   false alarms out of 20? The same is reported for v2.5 vs v2.7.
 - Event check and website-age lookup are off for all approaches. Results are reported with and
   without "suspected" rows.
+
+## Amendment 2 (13 Nov 2026) - written BEFORE blind test #5 is run
+
+- The independent agent found only 10 UK music scams not already used (20 genuine). No more
+  scams were available, so the test is **10 scams + 10 genuine**.
+- The 10 genuine rows were chosen **at random** (Python `random.Random(5).sample`), not by
+  reading them. The other 10 are kept in `data/blind5_spare_genuine.csv` and are not used here.
+- Because there are 10 genuine rows, "no more than 2 extra false alarms out of 20" becomes
+  **no more than 1 extra false alarm out of 10** (the same 10%).
+- Limits stated in advance: one example = 10 percentage points; 9 of 10 scams are rebuilt from
+  descriptions; 1 scam is "suspected" (results are also shown without it).
+- Nobody ran any checker version on these rows before this amendment was committed.

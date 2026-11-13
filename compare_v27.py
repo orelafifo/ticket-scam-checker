@@ -213,9 +213,10 @@ def answer(base):
     b, n = res.loc[base], res.loc["v2.7"]
     more = int(n["Scams caught"].split("/")[0]) - int(b["Scams caught"].split("/")[0])
     extra_fa = int(n["False alarms"].split("/")[0]) - int(b["False alarms"].split("/")[0])
-    ok = more > 0 and extra_fa <= 2
+    allowed = max(1, round(0.1 * n_g))      # 2 out of 20 genuine, 1 out of 10 (Amendment 2)
+    ok = more > 0 and extra_fa <= allowed
     return (f"v2.7 vs {base}: {more:+d} scams caught, {extra_fa:+d} false alarms -> "
-            f"**{'YES' if ok else 'NO'}** (needs more scams caught and no more than 2 extra false alarms).")
+            f"**{'YES' if ok else 'NO'}** (needs more scams caught and no more than {allowed} extra false alarm(s)).")
 
 
 def disagreements(a, b):
@@ -242,7 +243,7 @@ if "evidence_type" in test:
         res_c = pd.DataFrame({k: metrics(y[conv], p[conv]) for k, p in preds.items()}).T
         lines += [f"## Conversation rows only ({int(conv.sum())})", "", *table(res_c), ""]
 lines += ["## Where versions disagree", "", *disagreements("v2.6", "v2.7"), "", *disagreements("v2.5", "v2.7"), "",
-          "Small test set: one example = 5 percentage points; a difference of 1-2 examples is within noise."]
+          f"Small test set: one example = {100 / max(n_s, 1):.0f} percentage points; a difference of 1-2 examples is within noise."]
 (OUT / "blind5_report.md").write_text("\n".join(lines), encoding="utf-8")
 
 print("\n".join(lines))
