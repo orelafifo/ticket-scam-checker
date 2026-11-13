@@ -18,7 +18,8 @@ REAL_FILES = ["data/real_test_set.csv", "data/heldout_test_set.csv"]   # trainin
 # v2.7: blind tests #2-#4 have been run once, so they become training data, plus the
 # 51 new UK music rows (DATA_COLLECTION_v27.md). Blind test #5 is NOT in this list.
 REAL_FILES_V27 = REAL_FILES + ["data/blind2_test_set.csv", "data/blind3_test_set.csv",
-                               "data/blind4_test_set.csv", "data/v27_new_real_rows.csv"]
+                               "data/blind4_test_set.csv", "data/v27_new_real_rows.csv",
+                               "data/v27_orela_rows.csv"]   # 3 suspected scams, open WhatsApp groups
 
 
 def num(v, d):

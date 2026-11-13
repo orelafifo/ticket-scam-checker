@@ -2,7 +2,7 @@
 step2_train_v27.py - train the v2.7 decision model (the one the app uses).
 
 Same as step2_train_model.py (v2.6), plus Upgrade 1:
-  * trained on all 291 real rows (REAL_FILES_V27) + synthetic background
+  * trained on all real rows in REAL_FILES_V27 (294 as of 13 Nov) + synthetic background
   * ONE extra feature, meaning_score, from the MiniLM meaning model (meaning_model.py),
     C = 1.0 as chosen by select_v27.py under the pre-registered rule.
     Real rows get out-of-fold meaning scores, so the decision model never learns from a

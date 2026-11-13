@@ -19,7 +19,7 @@ def test_training_files_exclude_blind5():
 
 def test_v27_training_rows_load_with_unique_groups_for_genuine():
     real = load_real(REAL_FILES_V27)
-    assert len(real) == 291
+    assert len(real) == 294
     genuine = real[real.label == 0]
     assert genuine.group.is_unique
 

@@ -19,7 +19,8 @@ If MiniLM or spaCy can't load, the app still works with the rules alone and says
 
 ## What's new in v2.7 (in progress - see PREREGISTRATION_v27.md)
 - **Scope:** UK live music only.
-- **More real training data:** 291 real examples (blind tests #2-#4 + 51 new UK music examples),
+- **More real training data:** 294 real examples (blind tests #2-#4 + 51 new UK music examples + 3 suspected
+  scams from open WhatsApp group chats),
   up from 120. Every example now has a `notes` column saying whether it is a real message,
   rebuilt from a news story, or written for the project.
 - **Upgrade 1 - AI meaning score (done):** MiniLM reads the whole message and a small model
@@ -87,7 +88,7 @@ python select_v27.py        # v2.7 Upgrade 1: with vs without the meaning score 
 | data/real_test_set.csv, data/heldout_test_set.csv | 120 published-case rows (training) |
 | data/blind2_test_set.csv, data/blind3_test_set.csv, data/blind4_test_set.csv | earlier blind tests - training data for v2.7 |
 | data/v27_new_real_rows.csv | 51 new UK music examples (v2.7 training) |
-| data/v27_orela_rows.csv | Orela's own examples - waiting, not yet used for training |
+| data/v27_orela_rows.csv | Orela's own examples (3 suspected scams, open WhatsApp groups) - used for training |
 | data/used_sources_v27.txt | sources already used, so new data never repeats them |
 | data/paraphrase_stress.csv | 51 reworded red-flag sentences + 20 ordinary ones (AI-written) |
 | data/blind4_template.csv | column layout for blind test #4 |
@@ -104,9 +105,9 @@ python select_v27.py        # v2.7 Upgrade 1: with vs without the meaning score 
 - **v2.6** - AI inside the checker: text normalisation, MiniLM meaning-matcher, spaCy event
   extraction, ensemble uncertainty; "how did you meet the seller" question, price status, safety
   net, short form, misses log. Blind test #4: 12/20 caught, 0/20 false alarms (app view 15/20, 5/20).
-- **v2.7** (in progress) - UK live music scope, 291 real training examples, MiniLM meaning score.
+- **v2.7** (in progress) - UK live music scope, 294 real training examples, MiniLM meaning score.
 
-Limitations: small test sets; only 75 of 291 real training examples are real word-for-word messages
+Limitations: small test sets; only 78 of 294 real training examples are real word-for-word messages
 (114 scams rebuilt from news descriptions, 102 genuine examples written for the project); synthetic
 background data; the 3 new contact flags have no training data yet (weights = expert tier);
 MiniLM struggles with negation ("I'll transfer before you pay" can look like "after you pay").

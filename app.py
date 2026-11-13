@@ -35,7 +35,7 @@ if not os.path.exists("model/scam_model.joblib"):  # first run online: train the
 bundle = load_bundle()
 
 st.title("🎟️ Ticket Scam Checker")
-st.caption("Paste a resale listing before you pay. Prototype (v2.7) for UK live music – trained on 291 real "
+st.caption("Paste a resale listing before you pay. Prototype (v2.7) for UK live music – trained on 294 real "
            "examples plus synthetic ones. A warning tool, not a guarantee: always pay with buyer protection.")
 
 # ---------------- The 3 main questions ----------------
