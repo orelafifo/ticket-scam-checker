@@ -70,3 +70,29 @@ on the training rows only, before blind test #5 is collected.
 - About 40 rows: one listing = 5 percentage points; 1-2 listings difference is noise.
 - Event check and website-age lookup are off, as in all earlier blind tests.
 - "How did you meet the seller" is unknown for test rows unless the source says so.
+
+---
+
+## Amendment 1 (13 Nov 2026) - written BEFORE any blind test #5 data exists
+
+Decided by Orela: run blind test #5 now, with v2.7 = Upgrade 1 only.
+
+- **v2.7 is frozen as built:** features.py / normalise.py / semantic_flags.py as at this commit,
+  meaning score (C = 1.0), trained on 294 real rows + synthetic, threshold 0.4, 30-model ensemble.
+  Frozen copy: `model/scam_model_v27.joblib`.
+- **Upgrade 2 (screenshots / conversation flags) and Upgrade 3 (known-scams library) are NOT
+  part of the v2.7 that is tested.** They move to future work (or a later version with its own
+  blind test). So blind test #5 has no screenshot rows; full conversations ARE included
+  (at least 5), pasted as text, because the checker can already read pasted text.
+- **Approaches compared on the same rows, run ONCE** with
+  `python compare_v27.py --test data/blind5_test_set.csv`:
+  1. Rules only (v2.7 rulebook: any hard stop, or 2+ meaningful red flags)
+  2. Text model only (TF-IDF on the synthetic listings, threshold 0.4, as in earlier tests)
+  3. AI only (Gemini, same prompt as earlier tests, threshold 0.5) - if GEMINI_API_KEY is set
+  4. v2.5 (frozen), 5. v2.6 (frozen), 6. v2.7 model, 7. v2.7 as shown in the app
+- **Charts:** (a) rules only vs text only vs Gemini only vs v2.7; (b) v2.5 vs v2.7;
+  (c) v2.6 vs v2.7 (the pre-registered main question).
+- Main question unchanged: does v2.7 catch more scams than v2.6 with no more than 2 extra
+  false alarms out of 20? The same is reported for v2.5 vs v2.7.
+- Event check and website-age lookup are off for all approaches. Results are reported with and
+  without "suspected" rows.
